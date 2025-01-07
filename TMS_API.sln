@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMS_API", "TMS_API\TMS_API.csproj", "{3C7F989B-AB8F-E6AC-4763-8507B35D95B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMS_API", "API\TMS_API.csproj", "{3C7F989B-AB8F-E6AC-4763-8507B35D95B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
