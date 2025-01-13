@@ -1,5 +1,3 @@
-
-using Microsoft.Data.SqlClient;
 using TMS_API.Listeners;
 
 namespace TMS_API.BackgroundServices
@@ -8,13 +6,16 @@ namespace TMS_API.BackgroundServices
     {
         private readonly ILinesListener _linesListener;
         private readonly ILogger<HubsBackgroundService> _logger;
+        private readonly ISqlDependencyManager _sqlDependencyManager;
         private readonly string _connectionString;
 
-        public HubsBackgroundService(ILinesListener linesListener, ILogger<HubsBackgroundService> logger, IConfiguration configuration)
+        public HubsBackgroundService(ILinesListener linesListener, ILogger<HubsBackgroundService> logger, IConfiguration configuration, ISqlDependencyManager sqlDependencyManager)
         {
             _linesListener = linesListener ?? throw new ArgumentNullException(nameof(linesListener));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _connectionString =  configuration["ConnectionStrings:Development"] ?? throw new ArgumentNullException(nameof(configuration));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            _connectionString =  configuration["ConnectionStrings:Development"] ?? throw new ArgumentNullException (nameof(_connectionString));
+            _sqlDependencyManager = sqlDependencyManager ?? throw new ArgumentNullException(nameof(sqlDependencyManager));
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,7 +27,7 @@ namespace TMS_API.BackgroundServices
 
             try
             {
-                SqlDependency.Start(_connectionString);
+                _sqlDependencyManager.Start(_connectionString);
                 _logger.LogInformation("SqlDependency has started.");
 
                 await _linesListener.StartListening(); 
@@ -46,13 +47,11 @@ namespace TMS_API.BackgroundServices
                 _linesListener.StopListening();
                 _logger.LogInformation("LinesListener has stopped.");
 
-                SqlDependency.Stop(_connectionString);
+                _sqlDependencyManager.Stop(_connectionString);
                 _logger.LogInformation("SqlDependency has stopped.");
                 
                 _logger.LogInformation("HubsBackgroundService has stopped.");
             }
-
-           
         }
     }
 }
