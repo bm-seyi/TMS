@@ -52,6 +52,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ILinesListener, LinesListener>();
 builder.Services.AddSingleton<SqlDependency>();
 builder.Services.AddSingleton<IDatabaseActions, DatabaseActions>();
+builder.Services.AddSingleton<ISqlDependencyManager, SqlDependencyManager>();
 
 // Background Services
 builder.Services.AddHostedService<HubsBackgroundService>();
