@@ -28,9 +28,13 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 -Modified [TMS_API](TMS_API.sln) to support the addition of a new [Test](./Tests/Tests.csproj) project, which uses the `MsTest` framework for unit testing.
 
 
+## 0.0.4
+### Added
+- Introduced a new unit test to verify the functionality of the `ExecuteAsync` method's catch block, ensuring exceptions are handled correctly.  
+- Added a `Cleanup` method in [HubBackgroundServiceTests](./Tests/BackgroundServices/HubBackgroundServiceTests.cs) to reset initialized resources and improve test reliability.
 
-
-
+### Fixed/Changed
+- Updated `ExecuteAsync_Should_StartAndStopDependencies` to validate that `_mockSqlDependencyManager.Start` and `_mockSqlDependencyManager.Stop` are invoked, replacing the previous approach of checking specific text within the method.
 
 
 
