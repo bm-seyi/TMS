@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using TMS_API.BackgroundServices;
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 #endif
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false).AddEnvironmentVariables();
+string connectionString = builder.Configuration["ConnectionStrings:Development"] ?? throw new ArgumentNullException(nameof(connectionString));
 
 // Add services to the container.
 builder.Services.AddSignalR();
@@ -50,9 +52,14 @@ builder.Services.AddSwaggerGen();
 
 // Dependency Injection
 builder.Services.AddSingleton<ILinesListener, LinesListener>();
-builder.Services.AddSingleton<SqlDependency>();
 builder.Services.AddSingleton<IDatabaseActions, DatabaseActions>();
 builder.Services.AddSingleton<ISqlDependencyManager, SqlDependencyManager>();
+builder.Services.AddSingleton<IDbConnection>(sp =>
+{
+    
+    return new SqlConnection(connectionString);
+});
+
 
 // Background Services
 builder.Services.AddHostedService<HubsBackgroundService>();

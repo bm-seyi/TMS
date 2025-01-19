@@ -28,7 +28,7 @@ namespace TMS_API_Tests.BackgroundServices
         [TestMethod]
         public void Constructor_ShouldThrowArgumentNullException_LinesListenerIsNull()
         {
-            if (_mockLogger == null) throw new ArgumentNullException(nameof(_mockLogger));
+            if (_mockLinesListener == null) throw new ArgumentNullException(nameof(_mockLinesListener));
             // Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => new HubsBackgroundService(null!, _mockLogger.Object,_mockConfiguration.Object, _mockSqlDependencyManager.Object));
         }
@@ -52,7 +52,7 @@ namespace TMS_API_Tests.BackgroundServices
         [TestMethod]
         public void Constructor_ShouldThrowArgumentNullException_WhenSqlDependencyManagerIsNull()
         {
-            if (_mockConfiguration == null) throw new ArgumentNullException(nameof(_mockConfiguration));
+            if (_mockSqlDependencyManager == null) throw new ArgumentNullException(nameof(_mockSqlDependencyManager));
             // Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => new HubsBackgroundService(_mockLinesListener.Object, _mockLogger.Object, _mockConfiguration.Object, null!));
         }
@@ -73,7 +73,7 @@ namespace TMS_API_Tests.BackgroundServices
         {
             CancellationTokenSource CancellationToken = new CancellationTokenSource();
             _mockLinesListener.Setup(x => x.StartListening()).Returns(Task.CompletedTask);
-            _mockLinesListener.Setup(x => x.StopListening());
+            _mockLinesListener.Setup(x => x.StopListeningAsync());
 
             _mockConfiguration.Setup(c => c["ConnectionStrings:Development"]).Returns("FakeConnectionString");
             _mockSqlDependencyManager.Setup(x => x.Start(It.IsAny<string>())).Verifiable();
@@ -91,7 +91,7 @@ namespace TMS_API_Tests.BackgroundServices
 
 
             _mockLinesListener.Verify(x => x.StartListening(), Times.Once);
-            _mockLinesListener.Verify(x => x.StopListening(), Times.Once);
+            _mockLinesListener.Verify(x => x.StopListeningAsync(), Times.Once);
             
             _mockLogger.Verify(
                logger => logger.Log(
@@ -153,7 +153,7 @@ namespace TMS_API_Tests.BackgroundServices
         {
             CancellationTokenSource CancellationToken = new CancellationTokenSource();
             _mockLinesListener.Setup(x => x.StartListening()).Returns(Task.CompletedTask);
-            _mockLinesListener.Setup(x => x.StopListening());
+            _mockLinesListener.Setup(x => x.StopListeningAsync());
 
 
             Mock<IConfiguration> mockConfiguration = new Mock<IConfiguration>();

@@ -44,7 +44,7 @@ namespace TMS_API.BackgroundServices
             }
             finally
             {
-                _linesListener.StopListening();
+                await _linesListener.StopListeningAsync();
                 _logger.LogInformation("LinesListener has stopped.");
 
                 _sqlDependencyManager.Stop(_connectionString);
