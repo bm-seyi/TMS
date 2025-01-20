@@ -36,6 +36,19 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 ### Fixed/Changed
 - Updated `ExecuteAsync_Should_StartAndStopDependencies` to validate that `_mockSqlDependencyManager.Start` and `_mockSqlDependencyManager.Stop` are invoked, replacing the previous approach of checking specific text within the method.
 
+## 0.0.5
+### Added
+- Integrated an `IDbConnection` registry into the dependency injection container in [Program](./API/Program.cs) to enhance database connection management.
+- Added comprehensive unit testing for [LinesListener](./API/Listeners/LinesListeners.cs) with the creation of [LinesListenerTests](./Tests/Listeners/LinesListenersTests.cs).
+
+### Fixed/Updated
+- Refactored `StopListening` method to its asynchronous counterpart, `StopListeningAsync`, in [HubBackgroundServiceTests](./Tests/BackgroundServices/HubBackgroundServiceTests.cs).
+- Enhanced [LinesListener](./API/Listeners/LinesListeners.cs) by adopting dependency injection for managing both the database connection and `SqlDependency` instance.
+- Improved the [SqlDependencyManager](./API/Utilties/SqlDependencyManager.cs) to support initializing new instances of `SqlDependency`.
+
+### Notes
+- Several tests in [LinesListenerTests](./Tests/Listeners/LinesListenersTests.cs) have been temporarily commented out due to limitations in Moq handling explicit conversions used in [LinesListener](./API/Listeners/LinesListeners.cs).
+
 
 
 
