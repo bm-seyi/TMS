@@ -1,48 +1,107 @@
 using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Xml.Linq;
+using TMS_API.Models.Data;
 
 namespace TMS_API.Utilities
 {
     public interface IDatabaseActions
     {
-        Task<List<Dictionary<string, object>>> RetrieveLinesData();
+        Task<List<LinesModel>> RetrieveLinesDataAsync(CancellationToken cancellationToken = default);
+        Task<object?> ProcessQueueMessageAsync(CancellationToken cancellationToken = default);
     }
 
     public class DatabaseActions : IDatabaseActions
     {
-        private readonly string _connectionString;
         private readonly ILogger<DatabaseActions> _logger;
-        public DatabaseActions(IConfiguration configuration, ILogger<DatabaseActions> logger)
+        private readonly IDatabaseConnection _databaseConnection;
+        public DatabaseActions(ILogger<DatabaseActions> logger, IDatabaseConnection databaseConnection)
         {
-            _connectionString = configuration["ConnectionStrings:Development"] ?? throw new ArgumentNullException(nameof(configuration));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _databaseConnection = databaseConnection ?? throw new ArgumentNullException(nameof(databaseConnection));
         }
 
-        public async Task<List<Dictionary<string, object>>> RetrieveLinesData()
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                
-                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+        const string linesQuery = "SELECT [Id], [Latitude], [Longitude] FROM [dbo].[Lines]";
 
-                using (SqlCommand command = new SqlCommand("SELECT * FROM [dbo].[Lines]", connection))
+        public async Task<List<LinesModel>> RetrieveLinesDataAsync(CancellationToken cancellationToken = default)
+        {
+            await _databaseConnection.OpenAsync(cancellationToken);
+            _logger.LogInformation("Connection to database opened");
+            
+            List<LinesModel> LinesData = new List<LinesModel>();
+
+            await using (SqlCommand command = _databaseConnection.CreateSqlCommand(linesQuery))
+            await using (SqlDataReader reader = await _databaseConnection.ExecuteReaderAsync(command, cancellationToken))
+            {
+                while (await reader.ReadAsync(cancellationToken))
                 {
-                    await using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    LinesModel linesModel = new LinesModel
                     {
-                        while (await reader.ReadAsync())
+                        Id = reader.IsDBNull(1) ?  Guid.Empty :  reader.GetGuid(0),
+                        Latitude = reader.IsDBNull(1) ? 999.9 : (double)reader.GetDecimal(1),
+                        Longitude = reader.IsDBNull(2) ? 999.9 : (double)reader.GetDecimal(2)
+                    };
+                    LinesData.Add(linesModel);
+                }
+            }
+            return LinesData;
+        }
+
+        public async Task<object?> ProcessQueueMessageAsync(CancellationToken cancellationToken = default)
+        {
+            List<Guid> affectedIds = new List<Guid>();
+            using (SqlCommand command = _databaseConnection.CreateSqlCommand("WAITFOR (RECEIVE TOP (1) conversation_handle, message_body FROM DataChangeQueue), TIMEOUT 10000;"))
+            await using (SqlDataReader reader = await _databaseConnection.ExecuteReaderAsync(command, cancellationToken))
+            {
+                if (await reader.ReadAsync(cancellationToken))
+                {
+                    Guid conversationHandle = reader.GetGuid(0);
+                    string message = reader.IsDBNull(1) ? null! : reader.GetString(1);
+
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        XDocument xDocument = XDocument.Parse(message);
+                        affectedIds.AddRange(
+                        xDocument.Descendants("AffectedID")
+                                .Select(e => Guid.TryParse(e.Value, out var id) ? id : (Guid?)null)
+                                .OfType<Guid>()
+                        );
+
+                        if (xDocument.Descendants("OperationType").FirstOrDefault()?.Value == "DELETE")
                         {
-                            Dictionary<string, object> row = new Dictionary<string, object>();
-                            for (int i = 0; i < reader.FieldCount; i++)
+                            return affectedIds;
+                        }
+
+                        await using (SqlCommand recordsCommand = _databaseConnection.CreateSqlCommand($"{linesQuery} WHERE [ID] IN (@ids)"))
+                        {
+                            recordsCommand.Parameters.AddWithValue("@ids", string.Join(",", affectedIds));
+                            await using (SqlDataReader recordsReader = await _databaseConnection.ExecuteReaderAsync(recordsCommand, cancellationToken))
                             {
-                                row[reader.GetName(i)] = await reader.IsDBNullAsync(i) ? null! : reader.GetValue(i);
+                                List<LinesModel> LinesData = new List<LinesModel>();
+                                
+                                while (await recordsReader.ReadAsync(cancellationToken))
+                                {
+                                    LinesModel linesModel = new LinesModel
+                                    {
+                                        Id = recordsReader.IsDBNull(1) ?  Guid.Empty :  recordsReader.GetGuid(0),
+                                        Latitude = recordsReader.IsDBNull(1) ? 999.9 :  (double)recordsReader.GetDecimal(1),
+                                        Longitude = recordsReader.IsDBNull(2) ? 999.9 : (double)recordsReader.GetDecimal(2)
+                                    };
+                                    LinesData.Add(linesModel);
+                                }
+                                return LinesData;
                             }
-                            rows.Add(row);
                         }
                     }
-                }
 
-                return rows;
+                    using (SqlCommand endConversation = _databaseConnection.CreateSqlCommand("END CONVERSATION @conv;"))
+                    {
+                        endConversation.Parameters.AddWithValue("@conv", conversationHandle);
+                        await endConversation.ExecuteNonQueryAsync(cancellationToken);
+                    }
+                }
             }
+            return null;
         }
     }
 }

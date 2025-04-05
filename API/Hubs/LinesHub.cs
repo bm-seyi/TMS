@@ -11,10 +11,5 @@ namespace TMS_API.Hubs
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
-        public async Task sendData(string s)
-        {
-            await Clients.All.SendAsync(s);
-        }
     }
 }

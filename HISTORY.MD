@@ -50,5 +50,23 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Several tests in [LinesListenerTests](./Tests/Listeners/LinesListenersTests.cs) have been temporarily commented out due to limitations in Moq handling explicit conversions used in [LinesListener](./API/Listeners/LinesListeners.cs).
 
 
+## 0.1.0
+### Added
+- New `LinesBackgroundService` to replace the old `HubsBackgroundService`.
+- New `DatabaseConnection` interface and implementation for managing database connections.
+- New `LinesModel` class for strongly-typed line data.
+- New test files:
+  - `LinesBackgroundServiceTests.cs` for testing the new background service
+  - `DatabaseActionsTests.cs` for testing database actions
 
+### Fixed/Updated
+- Refactored `DatabaseActions` to use new `DatabaseConnection` and implement queue message processing.
+- Simplified `LinesHub` by removing unused `sendData` method.
+- Updated `Program` to use new background service and remove old dependencies.
+
+### Removed
+- Removed `HubsBackgroundService` and related tests.
+- Removed `LinesListener` implementation and related tests.
+- Removed `SqlDependencyManager` and all SQL dependency-based functionality.
+- Removed unused interfaces `ILinesListener` and `ISqlDependencyManager`.
 
