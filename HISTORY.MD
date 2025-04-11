@@ -70,3 +70,16 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed `SqlDependencyManager` and all SQL dependency-based functionality.
 - Removed unused interfaces `ILinesListener` and `ISqlDependencyManager`.
 
+## 0.1.1
+## Added
+- Added comprehensive unit tests for `LinesBackgroundService` covering various scenarios:
+  - Processing `LinesModel` data and sending to clients
+  - Processing deleted lines IDs and sending to clients
+  - Handling null data from queue
+  - Handling unknown data types from queue
+  - Operation cancellation scenarios
+  - Exception handling scenarios
+
+## Fixed/Updated
+- Updated `LinesBackgroundService` to log a warning message when stopping due to cancellation
+- Improved test coverage and verification of logging behavior in background service

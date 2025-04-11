@@ -54,6 +54,8 @@ public class LinesBackgroundService : BackgroundService
             }
             catch (OperationCanceledException)
             {
+                // This exception is expected when the service is stopping, so we can ignore it.
+                _logger.LogWarning("LinesBackgroundService is stopping due to cancellation.");
                 break;
             }
             catch (Exception ex)
