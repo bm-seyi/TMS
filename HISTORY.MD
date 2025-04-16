@@ -71,7 +71,7 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed unused interfaces `ILinesListener` and `ISqlDependencyManager`.
 
 ## 0.1.1
-## Added
+### Added
 - Added comprehensive unit tests for `LinesBackgroundService` covering various scenarios:
   - Processing `LinesModel` data and sending to clients
   - Processing deleted lines IDs and sending to clients
@@ -80,6 +80,25 @@ Future commits will focus on enhancing functionality and writing unit tests for 
   - Operation cancellation scenarios
   - Exception handling scenarios
 
-## Fixed/Updated
+### Fixed/Updated
 - Updated `LinesBackgroundService` to log a warning message when stopping due to cancellation
 - Improved test coverage and verification of logging behavior in background service
+
+## 0.1.2
+### Added
+- Added `OnConnectedAsync` method to `LinesHub` that sends lines data to newly connected clients
+- Added `IDatabaseActions` dependency to `LinesHub` constructor
+- Added `ExcludeFromCodeCoverage` attribute to `DatabaseActions` and `DatabaseConnection` classes
+- Added namespace `TMS_API.Utilities` to `DatabaseConnection` class
+- Added comprehensive unit tests for `LinesHub` including:
+  - Constructor null argument validation
+  - `OnConnectedAsync` behavior verification
+  - Client connection logging verification
+  - Data transmission verification
+
+### Fixed/Updated
+- Updated `DatabaseActions` to use async versions of `IsDBNull` methods
+- Updated `ProcessQueueMessageAsync` to explicitly open database connection
+- Improved null checks in `DatabaseConnection` constructor
+- Moved `DatabaseConnection` interface and class into `TMS_API.Utilities` namespace
+- Updated database reader operations to be fully asynchronous

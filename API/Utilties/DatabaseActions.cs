@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using TMS_API.Models.Data;
 
@@ -11,6 +12,7 @@ namespace TMS_API.Utilities
         Task<object?> ProcessQueueMessageAsync(CancellationToken cancellationToken = default);
     }
 
+    [ExcludeFromCodeCoverage]
     public class DatabaseActions : IDatabaseActions
     {
         private readonly ILogger<DatabaseActions> _logger;
@@ -37,9 +39,9 @@ namespace TMS_API.Utilities
                 {
                     LinesModel linesModel = new LinesModel
                     {
-                        Id = reader.IsDBNull(1) ?  Guid.Empty :  reader.GetGuid(0),
-                        Latitude = reader.IsDBNull(1) ? 999.9 : (double)reader.GetDecimal(1),
-                        Longitude = reader.IsDBNull(2) ? 999.9 : (double)reader.GetDecimal(2)
+                        Id = await reader.IsDBNullAsync(1, cancellationToken) ?  Guid.Empty :  reader.GetGuid(0),
+                        Latitude = await reader.IsDBNullAsync(1, cancellationToken) ? 999.9 : (double)reader.GetDecimal(1),
+                        Longitude = await reader.IsDBNullAsync(2, cancellationToken) ? 999.9 : (double)reader.GetDecimal(2)
                     };
                     LinesData.Add(linesModel);
                 }
@@ -49,6 +51,7 @@ namespace TMS_API.Utilities
 
         public async Task<object?> ProcessQueueMessageAsync(CancellationToken cancellationToken = default)
         {
+            await _databaseConnection.OpenAsync(cancellationToken);
             List<Guid> affectedIds = new List<Guid>();
             using (SqlCommand command = _databaseConnection.CreateSqlCommand("WAITFOR (RECEIVE TOP (1) conversation_handle, message_body FROM DataChangeQueue), TIMEOUT 10000;"))
             await using (SqlDataReader reader = await _databaseConnection.ExecuteReaderAsync(command, cancellationToken))
@@ -56,7 +59,7 @@ namespace TMS_API.Utilities
                 if (await reader.ReadAsync(cancellationToken))
                 {
                     Guid conversationHandle = reader.GetGuid(0);
-                    string message = reader.IsDBNull(1) ? null! : reader.GetString(1);
+                    string message = await reader.IsDBNullAsync(1, cancellationToken) ? null! : reader.GetString(1);
 
                     if (!string.IsNullOrWhiteSpace(message))
                     {
