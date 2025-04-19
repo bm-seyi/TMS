@@ -102,3 +102,18 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Improved null checks in `DatabaseConnection` constructor
 - Moved `DatabaseConnection` interface and class into `TMS_API.Utilities` namespace
 - Updated database reader operations to be fully asynchronous
+
+## 0.1.3
+
+### Added
+- Generic method `RetrieveModelAsync<T>` in `DatabaseActions` to replace specific data retrieval methods
+
+### Fixed/Updated
+- Updated `LinesHub.cs` to use the new generic `RetrieveModelAsync` method instead of the specific `RetrieveLinesDataAsync`
+- Simplified lines data retrieval query in `LinesHub.cs`
+- Renamed folder from `API/Utilties/` to `API/Utilities/` (corrected spelling)
+- Updated `LinesHubTests.cs` to mock and test the new generic `RetrieveModelAsync` method instead of `RetrieveLinesDataAsync`
+
+### Removed
+- Removed specific `RetrieveLinesDataAsync` method in favor of generic solution
+- Removed all queue message processing functionality previously in `DatabaseActions`

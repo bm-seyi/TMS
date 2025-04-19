@@ -21,7 +21,7 @@ namespace TMS_API.Hubs
             CancellationToken cancellationToken = Context.ConnectionAborted;
             _logger.LogInformation("Client connected to LinesHub: {0}", Context.ConnectionId);
 
-            List<LinesModel> linesData = await _databaseActions.RetrieveLinesDataAsync(cancellationToken);
+            List<LinesModel> linesData = await _databaseActions.RetrieveModelAsync<LinesModel>("SELECT [Id], [Latitude], [Longitude] FROM [dbo].[Lines]", cancellationToken);
 
             await Clients.Caller.SendAsync("ReceiveLinesData", linesData, cancellationToken);
             _logger.LogInformation("Lines data sent to client: {0}", Context.ConnectionId);
