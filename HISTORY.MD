@@ -104,7 +104,6 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Updated database reader operations to be fully asynchronous
 
 ## 0.1.3
-
 ### Added
 - Generic method `RetrieveModelAsync<T>` in `DatabaseActions` to replace specific data retrieval methods
 
@@ -117,3 +116,26 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 ### Removed
 - Removed specific `RetrieveLinesDataAsync` method in favor of generic solution
 - Removed all queue message processing functionality previously in `DatabaseActions`
+
+
+## 0.1.4
+### Added
+- Added support for stored procedure execution in `RetrieveModelAsync`
+- Added `LinesQueueModel` for queue message processing
+- Added nullable type handling in database value conversion
+- Added early exit when no queue data is available
+
+### Fixed/Updated
+- Refactored `LinesBackgroundService` to use simplified queue processing
+- Updated `DatabaseActions` to handle both queries and stored procedures
+- Improved property mapping with proper null handling
+- Simplified hub data retrieval logic
+- Cleaned up model property formatting
+- Updated tests to match new service behavior
+- Improved logging messages for queue processing
+
+### Removed
+- Removed complex queue message processing logic from `DatabaseActions`
+- Removed separate handling for different message types (delete/update)
+- Removed redundant test cases for obsolete functionality
+- Removed XML parsing dependencies

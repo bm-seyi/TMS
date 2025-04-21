@@ -27,29 +27,18 @@ public class LinesBackgroundService : BackgroundService
                 await using (AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope())
                 {
                     IDatabaseActions _databaseActions = scope.ServiceProvider.GetRequiredService<IDatabaseActions>();
-                    object? queueData = await _databaseActions.ProcessQueueMessageAsync(stoppingToken);
-            
-                    switch (queueData)
+                    List<LinesQueueModel> queueData = await _databaseActions.RetrieveModelAsync<LinesQueueModel>("ProcessDataChangeQueueMessage", true, stoppingToken);
+
+                    if (queueData.Count == 0)
                     {
-                        case List<LinesModel> lines:
-                            await _hubContext.Clients.All.SendAsync("ReceiveLinesData", lines, stoppingToken);
-                            _logger.LogInformation("Lines data sent to all clients.");
-                            break;
-                        
-                        case List<Guid> affectedIds:
-                            await _hubContext.Clients.All.SendAsync("DeletedLinesData", affectedIds, stoppingToken);
-                            _logger.LogInformation("Deleted lines data sent to all clients.");
-                            break;
-                        
-                        case null:
-                            _logger.LogWarning("Received null data from queue.");
-                            await Task.Delay(500, stoppingToken);
-                            break;
-                        
-                        default:
-                            _logger.LogWarning("Received unknown data type from queue: {1}", queueData?.GetType().Name);
-                            break;
+                        _logger.LogInformation("No data in queue. Waiting for new data...");
+                        await Task.Delay(500, stoppingToken);
+                        continue;
                     }
+
+                    await _hubContext.Clients.All.SendAsync("ReceiveLinesData", queueData, stoppingToken);
+                    _logger.LogInformation("Lines data sent to all clients.");
+                   
                 }
             }
             catch (OperationCanceledException)

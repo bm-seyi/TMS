@@ -79,12 +79,12 @@ namespace TMS_API.Tests.BackgroundServices
             
             Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
             
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
-                .Returns(async (CancellationToken token) => 
+            mockDatabaseActions.Setup(x => x.RetrieveModelAsync<LinesQueueModel>(It.IsAny<string>(), It.IsAny<bool>(),It.IsAny<CancellationToken>()))
+                .Returns(async (string test, bool value,CancellationToken token) => 
                 {
                     await Task.Delay(100, token);
                     processed.SetResult(true);
-                    return new List<LinesModel> { new LinesModel { Id = Guid.NewGuid(), Latitude = 1.0, Longitude = 2.0 } };
+                    return new List<LinesQueueModel> { new LinesQueueModel { Id = Guid.NewGuid(), Latitude = 1.0, Longitude = 2.0 } };
                 });
 
             mockServiceScope.Setup(x => x.ServiceProvider.GetService(typeof(IDatabaseActions)))
@@ -138,8 +138,9 @@ namespace TMS_API.Tests.BackgroundServices
         }
 
 
+
         [TestMethod]
-        public async Task ExecuteAsync_WhenProcessingAffectedIds_SendsDataAndLogsInfo()
+        public async Task ExecuteAsync_OperationCancelled_SendsDataAndLogsInfo()
         {
             // Arrange
             var cts = new CancellationTokenSource();
@@ -152,21 +153,21 @@ namespace TMS_API.Tests.BackgroundServices
             
             Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
             
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
-                .Returns(async (CancellationToken token) => 
+            mockDatabaseActions.Setup(x => x.RetrieveModelAsync<LinesQueueModel>(It.IsAny<string>(), It.IsAny<bool>(),It.IsAny<CancellationToken>()))
+                .Returns(async (string test, bool value ,CancellationToken token) => 
                 {
                     await Task.Delay(100, token);
                     processed.SetResult(true);
-                    return new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
+                    return new List<LinesQueueModel>();
                 });
 
             mockServiceScope.Setup(x => x.ServiceProvider.GetService(typeof(IDatabaseActions)))
                 .Returns(mockDatabaseActions.Object);
-
+            
             Mock<IClientProxy> mockClientProxy = new Mock<IClientProxy>();
             _mockHubContext.Setup(x => x.Clients.All).Returns(mockClientProxy.Object);
 
-            mockClientProxy.Setup(x => x.SendCoreAsync("DeletedLinesData", It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
+            mockClientProxy.Setup(x => x.SendCoreAsync("ReceiveLinesData", It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
 
@@ -191,189 +192,7 @@ namespace TMS_API.Tests.BackgroundServices
             logger => logger.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is stopping."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.Once);
-
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "Deleted lines data sent to all clients."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.AtLeastOnce);
-            
-            mockClientProxy.Verify(
-                proxy => proxy.SendCoreAsync("DeletedLinesData", It.IsAny<object[]>(), It.IsAny<CancellationToken>()),
-                Times.Once);
-        }
-
-        [TestMethod]
-        public async Task ExecuteAsync_WhenProcessingNull_SendsDataAndLogsInfo()
-        {
-            // Arrange
-            var cts = new CancellationTokenSource();
-            var processed = new TaskCompletionSource<bool>();
-
-            var service = new LinesBackgroundService(_mockHubContext.Object, _mockLogger.Object, _mockServiceScopeFactory.Object);
-
-            Mock<IServiceScope> mockServiceScope = new Mock<IServiceScope>();
-            _mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
-            
-            Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
-            
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
-                .Returns(async (CancellationToken token) => 
-                {
-                    await Task.Delay(100, token);
-                    processed.SetResult(true);
-                    return null;
-                });
-
-            mockServiceScope.Setup(x => x.ServiceProvider.GetService(typeof(IDatabaseActions)))
-                .Returns(mockDatabaseActions.Object);
-
-
-            // Act
-            var task = service.StartAsync(cts.Token);
-            await Task.WhenAny(processed.Task, Task.Delay(1000));
-            cts.Cancel();
-            await service.StopAsync(CancellationToken.None);
-            await Task.Delay(100);
-
-            // Assert
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is starting."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.Once);
-
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is stopping."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.Once);
-
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Warning,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "Received null data from queue."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.AtLeastOnce);
-            
-        }
-
-        [TestMethod]
-        public async Task ExecuteAsync_WhenProcessingDefault_SendsDataAndLogsInfo()
-        {
-            // Arrange
-            var cts = new CancellationTokenSource();
-            var processed = new TaskCompletionSource<bool>();
-
-            var service = new LinesBackgroundService(_mockHubContext.Object, _mockLogger.Object, _mockServiceScopeFactory.Object);
-
-            Mock<IServiceScope> mockServiceScope = new Mock<IServiceScope>();
-            _mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
-            
-            Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
-            
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
-                .Returns(async (CancellationToken token) => 
-                {
-                    await Task.Delay(100, token);
-                    processed.SetResult(true);
-                    return "Test string";
-                });
-
-            mockServiceScope.Setup(x => x.ServiceProvider.GetService(typeof(IDatabaseActions)))
-                .Returns(mockDatabaseActions.Object);
-
-
-            // Act
-            var task = service.StartAsync(cts.Token);
-            await Task.WhenAny(processed.Task, Task.Delay(1000));
-            cts.Cancel();
-            await service.StopAsync(CancellationToken.None);
-            await Task.Delay(100);
-
-            // Assert
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is starting."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.Once);
-
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is stopping."),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.Once);
-
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Warning,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "Received unknown data type from queue: String"),
-                    It.IsAny<Exception>(),
-                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
-                Times.AtLeastOnce);
-        }
-
-        [TestMethod]
-        public async Task ExecuteAsync_OperationCancelled_SendsDataAndLogsInfo()
-        {
-            // Arrange
-            var cts = new CancellationTokenSource();
-            var processed = new TaskCompletionSource<bool>();
-
-            var service = new LinesBackgroundService(_mockHubContext.Object, _mockLogger.Object, _mockServiceScopeFactory.Object);
-
-            Mock<IServiceScope> mockServiceScope = new Mock<IServiceScope>();
-            _mockServiceScopeFactory.Setup(x => x.CreateScope()).Returns(mockServiceScope.Object);
-            
-            Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
-            
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
-                .Returns(async (CancellationToken token) => 
-                {
-                    await Task.Delay(100, token);
-                    processed.SetResult(true);
-                    return null;
-                });
-
-            mockServiceScope.Setup(x => x.ServiceProvider.GetService(typeof(IDatabaseActions)))
-                .Returns(mockDatabaseActions.Object);
-
-
-            // Act
-            var task = service.StartAsync(cts.Token);
-            await Task.WhenAny(processed.Task, Task.Delay(1000));
-            cts.Cancel();
-            await service.StopAsync(CancellationToken.None);
-            await Task.Delay(100);
-
-            // Assert
-            _mockLogger.Verify(
-            logger => logger.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "LinesBackgroundService is starting."),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString() == "No data in queue. Waiting for new data..."),
                     It.IsAny<Exception>(),
                     (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
                 Times.Once);
@@ -412,7 +231,7 @@ namespace TMS_API.Tests.BackgroundServices
             
             Mock<IDatabaseActions> mockDatabaseActions = new Mock<IDatabaseActions>();
             
-            mockDatabaseActions.Setup(x => x.ProcessQueueMessageAsync(It.IsAny<CancellationToken>()))
+            mockDatabaseActions.Setup(x => x.RetrieveModelAsync<LinesQueueModel>(It.IsAny<string>(), It.IsAny<bool>(),It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"))
                 .Callback(() => exceptionThrown.SetResult(true));
 

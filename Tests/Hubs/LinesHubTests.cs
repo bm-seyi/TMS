@@ -55,7 +55,7 @@ namespace TMS_API.Tests.Hubs
                 new LinesModel { Id = Guid.NewGuid(), Latitude = 1.0, Longitude = 2.0 }
             };
 
-            _mockDatabaseActions.Setup(d => d.RetrieveModelAsync<LinesModel>(It.IsAny<String>(),cancellationToken))
+            _mockDatabaseActions.Setup(d => d.RetrieveModelAsync<LinesModel>(It.IsAny<string>(), It.IsAny<bool>(), cancellationToken))
                 .ReturnsAsync(expectedLinesData)
                 .Verifiable();
 
