@@ -5,7 +5,8 @@ using TMS_API.Utilities;
 var builder = WebApplication.CreateBuilder(args);
 
 #if DEBUG
-    DotNetEnv.Env.Load(Path.Combine(Environment.CurrentDirectory, "Resources/.env"));
+    string parentDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName ?? throw new ArgumentNullException(nameof(parentDirectory));
+    DotNetEnv.Env.Load(Path.Combine(parentDirectory, ".env"));
 #endif
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false).AddEnvironmentVariables();
