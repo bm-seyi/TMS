@@ -1,0 +1,21 @@
+services:
+  tms:
+    build: .
+    container_name: tms_api
+    ports:
+      - "8080:80"
+    restart: "no"
+    networks:
+      - tms_network
+    env_file:
+      - .env
+    environment:
+      - ConnectionStrings__Development=${ContainerConnectionString}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+
+
+networks:
+  tms_network:
+    name: tms_network
+    external: true

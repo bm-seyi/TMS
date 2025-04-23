@@ -139,3 +139,27 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed separate handling for different message types (delete/update)
 - Removed redundant test cases for obsolete functionality
 - Removed XML parsing dependencies
+
+## 0.1.5
+### Added
+- Added Docker Compose configuration (`docker-compose.yml`) with:
+  - Custom network configuration (`tms_network`)
+  - Environment variable support
+  - Port mapping (8080:80)
+  - Explicit container naming
+- Added parent directory traversal for `.env` file loading
+- Added HTTPS (443) port exposure in Dockerfile
+- Added explicit environment variable configuration in Docker Compose
+
+### Fixed/Updated
+- Updated Dockerfile to:
+  - Correct project name references (`TMS_IDP` → `TMS_API`)
+  - Simplify project structure (removed test project references)
+  - Standardize port configuration
+- Updated `.env` file loading to handle parent directory location
+- Updated container entrypoint to match correct DLL name
+- Improved environment variable handling between Compose and app
+
+### Removed
+- Removed test project references from Docker build process
+- Removed redundant port exposure (kept only 80/443)
