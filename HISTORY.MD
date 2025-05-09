@@ -163,3 +163,9 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 ### Removed
 - Removed test project references from Docker build process
 - Removed redundant port exposure (kept only 80/443)
+
+## 0.1.6
+## Added
+- Added `contents: read` permissions to GitHub workflows for:
+  - Dependency Review workflow
+  - Unit Tests workflow
