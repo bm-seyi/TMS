@@ -165,7 +165,39 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed redundant port exposure (kept only 80/443)
 
 ## 0.1.6
-## Added
+### Added
 - Added `contents: read` permissions to GitHub workflows for:
   - Dependency Review workflow
   - Unit Tests workflow
+
+## 0.2.0
+### Added
+- Redis support with StackExchange.Redis integration for SignalR backplane
+- JWT Bearer authentication with comprehensive configuration options
+- New configuration models (`RedisOptions`, `JwtOptions`) for structured app settings
+- SignalR-specific authorization policies (`signalR.Read`, `signalR.Write`)
+- Support for multiple appsettings files (environment-specific)
+- Token extraction from both Authorization header and query string for WebSocket connections
+- Enhanced Redis configuration with extensive connection options
+- .NET 9.0 target framework support
+- Additional SignalR Redis package dependency
+
+### Fixed/Updated
+- Upgraded from .NET 8.0 to .NET 9.0
+- Updated package versions:
+  - Microsoft.AspNetCore.Authentication.JwtBearer (8.0.11 → 9.0.5)
+  - Microsoft.Data.SqlClient (5.2.2 → 6.0.2)
+  - Swashbuckle.AspNetCore (6.6.2 → 8.1.1)
+- Enhanced JWT authentication configuration with proper realm settings
+- Improved token validation parameters with configurable clock skew
+- Refactored authentication scheme configuration to use JwtBearerDefaults
+- Updated appsettings.json with comprehensive Redis and JWT configuration sections
+- Removed assembly info generation attributes from project file
+- Improved error details inclusion in development environment
+
+### Removed
+- HISTORY.MD file (replaced with changelog.md)
+- Old API scope policy ("ApiScope") in favor of SignalR-specific policies
+- Hardcoded JWT authority and validation parameters
+- Direct SQL connection string reference in Program.cs
+- .NET 8.0 target framework support
