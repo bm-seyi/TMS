@@ -243,3 +243,16 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 ## 0.3.1
 ### Removed
 - `LinesHub` SignalR hub (`API/Hubs/LinesHub.cs`), which previously handled client connections and served `LinesModel` data from the database.
+
+
+## 0.3.2
+### Fixed/Updated
+- Simplified `Program.cs` setup using top-level statements.
+- Application run changed from `app.Run()` to asynchronous `await app.RunAsync()`.
+
+### Removed
+- SignalR and Redis configuration (`AddSignalR().AddStackExchangeRedis(...)`).
+- JWT authentication and authorization policies (`AddAuthentication`, `AddJwtBearer`, `AddAuthorization`).
+- Dependency injection for `IDatabaseActions` and `IDatabaseConnection`.
+- Background service `LinesBackgroundService`.
+- SignalR hub endpoint mapping (`app.MapHub<LinesHub>("/LinesHub")`).
