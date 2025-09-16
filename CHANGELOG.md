@@ -238,3 +238,8 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - **Database utilities**:
   - `DatabaseActions.cs`
   - `DatabaseConnection.cs`
+
+
+## 0.3.1
+### Removed
+- `LinesHub` SignalR hub (`API/Hubs/LinesHub.cs`), which previously handled client connections and served `LinesModel` data from the database.
