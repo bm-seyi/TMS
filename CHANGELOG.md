@@ -140,6 +140,7 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed redundant test cases for obsolete functionality
 - Removed XML parsing dependencies
 
+
 ## 0.1.5
 ### Added
 - Added Docker Compose configuration (`docker-compose.yml`) with:
@@ -164,11 +165,13 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Removed test project references from Docker build process
 - Removed redundant port exposure (kept only 80/443)
 
+
 ## 0.1.6
 ### Added
 - Added `contents: read` permissions to GitHub workflows for:
   - Dependency Review workflow
   - Unit Tests workflow
+
 
 ## 0.2.0
 ### Added
@@ -201,3 +204,37 @@ Future commits will focus on enhancing functionality and writing unit tests for 
 - Hardcoded JWT authority and validation parameters
 - Direct SQL connection string reference in Program.cs
 - .NET 8.0 target framework support
+
+
+## 0.3.0
+### Added
+- New solution structure with multiple projects:
+  - **Core**
+  - **Repository**
+  - **Models**
+  - **SignalR**
+  - **Aspire**
+
+### Fixed / Updated
+- Renamed project reference:
+  - `TMS_API.csproj` → `API.csproj`
+- Updated solution file (`TMS_API.sln`) with additional projects and platform configurations (x64, x86).
+
+### Removed
+- **Legacy files and services**:
+  - `.dockerignore`
+  - `Dockerfile`
+  - `docker-compose.yml`
+- **Legacy project**:
+  - `API/TMS_API.csproj`
+- **Background service**:
+  - `LinesBackgroundService.cs`
+- **Configuration models**:
+  - `Jwt.cs`
+  - `Redis.cs`
+- **Data models**:
+  - `LinesModel.cs`
+  - `LinesQueueModel.cs`
+- **Database utilities**:
+  - `DatabaseActions.cs`
+  - `DatabaseConnection.cs`
