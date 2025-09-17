@@ -3,7 +3,7 @@
   <Project Path="Aspire/Aspire.csproj" />
   <Project Path="Core/Core.csproj" />
   <Project Path="Models/Models.csproj" />
-  <Project Path="Repository/Repository.csproj" />
+  <Project Path="Persistence/Persistence.csproj" />
   <Project Path="SignalR/SignalR.csproj" />
   <Project Path="Tests/Tests.csproj" />
 </Solution>
