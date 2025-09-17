@@ -2,8 +2,9 @@
   <Project Path="API/API.csproj" />
   <Project Path="Aspire/Aspire.csproj" />
   <Project Path="Core/Core.csproj" />
+  <Project Path="IntegrationTests/IntegrationTests.csproj" />
   <Project Path="Models/Models.csproj" />
   <Project Path="Persistence/Persistence.csproj" />
   <Project Path="SignalR/SignalR.csproj" />
-  <Project Path="Tests/Tests.csproj" />
+  <Project Path="UnitTests/UnitTests.csproj" />
 </Solution>

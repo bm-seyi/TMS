@@ -1,5 +1,3 @@
-
-
 using Models.Dtos;
 
 namespace Core.Interfaces.Persistence
