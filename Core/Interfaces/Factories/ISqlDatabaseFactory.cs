@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 
-namespace Core.Interfaces.Factories
+namespace TMS.Core.Interfaces.Factories
 {
     public interface ISqlDatabaseFactory
     {

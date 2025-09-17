@@ -3,7 +3,6 @@ using System.Text;
 using System.Data;
 using System.Data.Common;
 using Dapper;
-using Core.Interfaces.Persistence;
 
 
 namespace Persistence

@@ -1,8 +1,6 @@
+using TMS.Models.Dtos;
 
-
-using Models.Dtos;
-
-namespace Core.Interfaces.Persistence
+namespace TMS.Core.Interfaces.Persistence
 {
     public interface IUnitofWork : IAsyncDisposable
     {

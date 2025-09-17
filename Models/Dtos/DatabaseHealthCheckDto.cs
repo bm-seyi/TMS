@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Models.Dtos
+namespace TMS.Models.Dtos
 {
     [ExcludeFromCodeCoverage]
     public class DatabaseHealthCheckDto
