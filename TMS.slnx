@@ -1,9 +1,10 @@
 <Solution>
-  <Project Path="API/API.csproj" />
-  <Project Path="Aspire/Aspire.csproj" />
-  <Project Path="Core/Core.csproj" />
-  <Project Path="Models/Models.csproj" />
-  <Project Path="Persistence/Persistence.csproj" />
-  <Project Path="SignalR/SignalR.csproj" />
-  <Project Path="Tests/Tests.csproj" />
+  <Project Path="TMS.IntegrationTests/TMS.IntegrationTests.csproj" />
+  <Project Path="TMS.API/API.csproj" />
+  <Project Path="TMS.Aspire/Aspire.csproj" />
+  <Project Path="TMS.Core/Core.csproj" />
+  <Project Path="TMS.Models/Models.csproj" />
+  <Project Path="TMS.Persistence/Persistence.csproj" />
+  <Project Path="TMS.SignalR/SignalR.csproj" />
+  <Project Path="TMS.UnitTests/UnitTests.csproj" />
 </Solution>
