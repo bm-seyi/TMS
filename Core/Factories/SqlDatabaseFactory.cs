@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using TMS.Core.Interfaces.Factories;
+using Core.Interfaces.Factories;
 
 
-namespace TMS.Core.Factories
+namespace Core.Factories
 {
     /// <summary>
     /// Handles Database connection creation

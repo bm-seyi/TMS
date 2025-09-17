@@ -1,4 +1,4 @@
-namespace TMS.Core.Interfaces.Persistence
+namespace Core.Interfaces.Persistence
 {
     public interface IRepository
     {
