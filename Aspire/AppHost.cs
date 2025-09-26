@@ -2,7 +2,7 @@ IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(ar
 
 IResourceBuilder<ParameterResource> devServerPassword = builder.AddParameter("DevServerPassword", secret: true);
 
-builder.AddSqlServer("DevServer", devServerPassword, 1433)
+IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", devServerPassword, 1433)
     .WithLifetime(ContainerLifetime.Session)
     .WithImage("mssql/server", "2022-latest")
     .WithEnvironment("ACCEPT_EULA", "Y")
@@ -18,7 +18,7 @@ IResourceBuilder<ContainerResource> zookeeper = builder.AddContainer("zookeeper"
         x.Port = 2181;
     });
 
-builder.AddContainer("kafka", "confluentinc/cp-kafka", "7.4.0")
+IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "7.4.0")
     .WithEnvironment("KAFKA_BROKER_ID", "1")
     .WithEnvironment("KAFKA_ZOOKEEPER_CONNECT", "zookeeper:2181")
     .WithEnvironment("KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT")
@@ -30,6 +30,16 @@ builder.AddContainer("kafka", "confluentinc/cp-kafka", "7.4.0")
         x.Port = 9092;
     })
     .WaitFor(zookeeper);
+
+builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:29092")
+    .WithEnvironment("GROUP_ID", "1")
+    .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
+    .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
+    .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
+    .WaitFor(kafka)  
+    .WaitFor(zookeeper)
+    .WaitFor(devServer);
 
 DistributedApplication distributedApplication = builder.Build();
 
