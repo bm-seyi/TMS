@@ -5,6 +5,7 @@
   <Project Path="IntegrationTests/IntegrationTests.csproj" />
   <Project Path="Models/Models.csproj" />
   <Project Path="Persistence/Persistence.csproj" />
+  <Project Path="ServiceDefaults/ServiceDefaults.csproj" />
   <Project Path="SignalR/SignalR.csproj" />
   <Project Path="UnitTests/UnitTests.csproj" />
 </Solution>
