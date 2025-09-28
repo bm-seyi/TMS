@@ -9,7 +9,7 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
 
-IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "7.4.0")
+IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
     .WithEnvironment("KAFKA_NODE_ID", "1")
     .WithEnvironment("KAFKA_PROCESS_ROLES", "broker,controller")
     .WithEnvironment("KAFKA_LISTENERS", "PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092")
@@ -32,8 +32,9 @@ builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
     .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
     .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
     .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
-    .WaitFor(kafka)  
-    .WaitFor(devServer);
+    .WaitFor(kafka)
+    .WaitFor(devServer)
+    .WithBindMount("../resources/kafka/", "/kafka/connectors/");
 
 DistributedApplication distributedApplication = builder.Build();
 
