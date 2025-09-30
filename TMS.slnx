@@ -8,4 +8,5 @@
   <Project Path="ServiceDefaults/ServiceDefaults.csproj" />
   <Project Path="SignalR/SignalR.csproj" />
   <Project Path="UnitTests/UnitTests.csproj" />
+  <Project Path="WorkerService/WorkerService.csproj" />
 </Solution>
