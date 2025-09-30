@@ -1,3 +1,5 @@
+using SignalR.Hubs;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
@@ -9,5 +11,7 @@ builder.Configuration
 builder.AddServiceDefaults();
 
 WebApplication app = builder.Build();
+
+app.MapHub<LinesHub>("/linesHub");
 
 await app.RunAsync();
