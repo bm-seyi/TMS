@@ -10,6 +10,8 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
+builder.Services.AddSignalR();
+
 WebApplication app = builder.Build();
 
 app.MapHub<LinesHub>("/linesHub");

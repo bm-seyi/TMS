@@ -15,4 +15,9 @@
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SignalR\SignalR.csproj" />
+    <ProjectReference Include="..\WorkerService\WorkerService.csproj" />
+  </ItemGroup>
+
 </Project>
