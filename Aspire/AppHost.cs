@@ -1,3 +1,5 @@
+using Projects;
+
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
 IResourceBuilder<ParameterResource> devServerPassword = builder.AddParameter("DevServerPassword", secret: true);
@@ -8,6 +10,15 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
     .WithEnvironment("ACCEPT_EULA", "Y")
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
+
+IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:29092")
+    .WithEnvironment("GROUP_ID", "1")
+    .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
+    .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
+    .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
+    .WaitFor(devServer)
+    .WithBindMount("../resources/kafka/", "/kafka/connectors/");
 
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
     .WithEnvironment("KAFKA_NODE_ID", "1")
@@ -24,17 +35,16 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     {
         x.TargetPort = 9092;
         x.Port = 9092;
-    });
+    })
+    .WaitFor(debezium);
 
-builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
-    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:29092")
-    .WithEnvironment("GROUP_ID", "1")
-    .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
-    .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
-    .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
-    .WaitFor(kafka)
-    .WaitFor(devServer)
-    .WithBindMount("../resources/kafka/", "/kafka/connectors/");
+
+IResourceBuilder<ProjectResource> signalR = builder.AddProject<SignalR>("SignalR")
+    .WaitFor(devServer);
+
+builder.AddProject<WorkerService>("WorkerService")
+    .WaitFor(signalR)
+    .WaitFor(kafka);
 
 DistributedApplication distributedApplication = builder.Build();
 
