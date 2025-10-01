@@ -2,12 +2,12 @@ namespace Core.Interfaces.Persistence
 {
     public interface IRepository
     {
-        Task AddAsync<T>(T entity, string tableName, CancellationToken cancellationToken = default);
-        Task<IEnumerable<T>> GetAsync<T>(string tableName, string primaryKey, object id, CancellationToken cancellationToken = default);
-        Task<IEnumerable<T>> GetAsync<T>(string tableName, CancellationToken cancellationToken = default);
-        Task<IEnumerable<T>> GetAsync<T>(string tableName, object id, string columnName, CancellationToken cancellationToken = default);
-        Task<int> UpdateAsync<T>(string tableName, string primaryKey, object Id, T entity, CancellationToken cancellationToken = default);
-        Task<int> DeleteAsync(string tableName, string primaryKey, object Id, CancellationToken cancellationToken = default);
+        Task AddAsync<T>(T entity, CancellationToken cancellationToken = default);
+        Task<T?> GetAsync<T>(object id, CancellationToken cancellationToken = default) where T : class;
+        Task<IEnumerable<T>> GetAsync<T>(CancellationToken cancellationToken = default);
+        Task<T?> GetAsync<T>(object id, string columnName, CancellationToken cancellationToken = default) where T : class;
+        Task<int> UpdateAsync<T>(object Id, T entity, CancellationToken cancellationToken = default);
+        Task<int> DeleteAsync(object Id, CancellationToken cancellationToken = default);
         
     }
 }
