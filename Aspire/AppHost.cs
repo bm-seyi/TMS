@@ -1,6 +1,11 @@
+using Aspire;
+using Microsoft.Extensions.DependencyInjection;
 using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DebeziumHealth>("debezium-healthcheck");
 
 IResourceBuilder<ParameterResource> devServerPassword = builder.AddParameter("DevServerPassword", secret: true);
 
@@ -11,14 +16,19 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
 
-IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
-    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:29092")
+builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
     .WithEnvironment("GROUP_ID", "1")
     .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
     .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
     .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
     .WaitFor(devServer)
-    .WithBindMount("../resources/kafka/", "/kafka/connectors/");
+    .WithHealthCheck("debezium-healthcheck")
+    .WithEndpoint("debezium", x =>
+    {
+        x.TargetPort = 8083;
+        x.Port = 8083;
+    });
 
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
     .WithEnvironment("KAFKA_NODE_ID", "1")
@@ -33,11 +43,9 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     .WithEnvironment("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1")
     .WithEndpoint("kafka", x =>
     {
-        x.TargetPort = 9092;
-        x.Port = 9092;
-    })
-    .WaitFor(debezium);
-
+        x.TargetPort = 29092;
+        x.Port = 29092;
+    });
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<SignalR>("SignalR")
     .WaitFor(devServer);

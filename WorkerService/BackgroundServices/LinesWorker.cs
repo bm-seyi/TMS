@@ -1,6 +1,5 @@
-
-using Confluent.Kafka;
 using Microsoft.AspNetCore.SignalR;
+using Confluent.Kafka;
 using SignalR.Hubs;
 
 namespace WorkerService.BackgroundServices
@@ -20,13 +19,13 @@ namespace WorkerService.BackgroundServices
         {
             ConsumerConfig consumerConfig = new ConsumerConfig
             {
-                BootstrapServers = "localhost:9092",
+                BootstrapServers = "localhost:29092",
                 GroupId = "lines-consumer-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             using IConsumer<Ignore, string> consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-            consumer.Subscribe("sqlserver.dob.lines");
+            consumer.Subscribe("DevServer.dbo.Lines");
 
             while (!stoppingToken.IsCancellationRequested)
             {
