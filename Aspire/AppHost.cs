@@ -16,7 +16,7 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
 
-builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
     .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
     .WithEnvironment("GROUP_ID", "1")
     .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
@@ -52,6 +52,7 @@ IResourceBuilder<ProjectResource> signalR = builder.AddProject<SignalR>("SignalR
 
 builder.AddProject<WorkerService>("WorkerService")
     .WaitFor(signalR)
+    .WaitFor(debezium)
     .WaitFor(kafka);
 
 DistributedApplication distributedApplication = builder.Build();
