@@ -5,6 +5,7 @@ using Dapper;
 using Core.Interfaces.Persistence;
 using Core.Interfaces.Factories;
 using Models.Dtos;
+using Persistence.Repositories;
 
 
 
@@ -18,7 +19,6 @@ namespace FlightSearchEngine.Persistence
         private readonly ILogger<UnitofWork> _logger;
         private readonly SqlConnection _sqlConnection;
         private DbTransaction? sqlTransaction;
-
         public UnitofWork(ISqlDatabaseFactory sqlDatabaseFactory, ILogger<UnitofWork> logger)
         {
             _ = sqlDatabaseFactory ?? throw new ArgumentNullException(nameof(sqlDatabaseFactory));
@@ -26,7 +26,8 @@ namespace FlightSearchEngine.Persistence
 
             _sqlConnection = sqlDatabaseFactory.CreateConnection("DefaultConnection");
         }
-    
+
+        public IRepository Lines => new LinesRepository(_sqlConnection, sqlTransaction) { TableName = "Lines" , PrimaryKey = "Id" };
 
         /// <summary>
         /// Asynchronously opens the SQL database connection.
