@@ -35,6 +35,7 @@ namespace WorkerService.BackgroundServices
                 _logger.LogInformation("Received: {Message}", consumeResult.Message.Value);
 
                 await _hubContext.Clients.All.SendAsync("ReceiveLineUpdate", consumeResult.Message.Value, stoppingToken);
+                _logger.LogInformation("ReceiveLineUpdate sent to clients");
             }
         }
     }
