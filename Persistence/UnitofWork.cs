@@ -6,10 +6,11 @@ using Core.Interfaces.Persistence;
 using Core.Interfaces.Factories;
 using Models.Dtos;
 using Persistence.Repositories;
+using System.Diagnostics;
 
 
 
-namespace FlightSearchEngine.Persistence
+namespace Persistence
 {
     /// <summary>
     /// Responsible for Database Actions.
@@ -19,6 +20,7 @@ namespace FlightSearchEngine.Persistence
         private readonly ILogger<UnitofWork> _logger;
         private readonly SqlConnection _sqlConnection;
         private DbTransaction? sqlTransaction;
+        private static readonly ActivitySource _activitySource = new ActivitySource("Persistence.UnitofWork");
         public UnitofWork(ISqlDatabaseFactory sqlDatabaseFactory, ILogger<UnitofWork> logger)
         {
             _ = sqlDatabaseFactory ?? throw new ArgumentNullException(nameof(sqlDatabaseFactory));
@@ -39,6 +41,8 @@ namespace FlightSearchEngine.Persistence
         /// </remarks>
         public async Task OpenAsync(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("OpenAsync");
+
             await _sqlConnection.OpenAsync(cancellationToken);
             _logger.LogDebug("Connection to database has successfully been opened.");
         }
@@ -49,6 +53,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>Returns Task</returns>
         public async Task BeginAsync(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("BeginAsync");
+
             await OpenAsync(cancellationToken);
 
             sqlTransaction = await _sqlConnection.BeginTransactionAsync(cancellationToken);
@@ -62,6 +68,8 @@ namespace FlightSearchEngine.Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("CommitAsync");
+
             try
             {
                 if (sqlTransaction == null)
@@ -98,6 +106,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>Returns a Task</returns>
         public async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("RollbackAsync");
+
             try
             {
                 if (sqlTransaction == null)
@@ -121,6 +131,8 @@ namespace FlightSearchEngine.Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async ValueTask DisposeAsync()
         {
+            using Activity? activity = _activitySource.StartActivity("DisposeAsync");
+
             if (sqlTransaction != null)
             {
                 await sqlTransaction.DisposeAsync();
@@ -141,6 +153,8 @@ namespace FlightSearchEngine.Persistence
         /// </returns>
         public async Task<DatabaseHealthCheckDto> HealthCheckAsync(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("HealthCheckAsync");
+
             string query = "SELECT [name] AS [DatabaseName], [state_desc] AS [Status] FROM sys.databases WHERE [name] = DB_NAME();";
             if (_sqlConnection.State == System.Data.ConnectionState.Closed)
             {
@@ -162,6 +176,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>Returns Task</returns>
         public async Task CloseAsync()
         {
+            using Activity? activity = _activitySource.StartActivity("CloseAsync");
+            
             if (_sqlConnection.State != System.Data.ConnectionState.Closed)
             {
                 await _sqlConnection.CloseAsync();
