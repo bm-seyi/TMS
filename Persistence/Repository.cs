@@ -4,9 +4,10 @@ using System.Data;
 using System.Data.Common;
 using Dapper;
 using Core.Interfaces.Persistence;
+using System.Diagnostics;
 
 
-namespace FlightSearchEngine.Persistence
+namespace Persistence
 {
     /// <summary>
     /// This is generic class used to implement the repository pattern
@@ -15,11 +16,12 @@ namespace FlightSearchEngine.Persistence
     {
         protected readonly SqlConnection _sqlConnection;
         protected readonly DbTransaction? _dbTransaction;
- 
-        protected Repository(SqlConnection sqlConnection, DbTransaction? dbTransaction)
+        protected readonly ActivitySource _activitySource;
+        protected Repository(SqlConnection sqlConnection, DbTransaction? dbTransaction, string activitySourceName)
         {
             _sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection));
             _dbTransaction = dbTransaction;
+            _activitySource = new ActivitySource(activitySourceName);
         }
        
         public required string TableName { get; set; }
@@ -33,6 +35,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>A task representing the asynchronous operation.</returns>
         public virtual async Task AddAsync<T>(T entity, CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("AddAsync");
+
             CheckTransaction();
  
             string query = GenerateInsertQuery<T>();
@@ -49,7 +53,9 @@ namespace FlightSearchEngine.Persistence
         /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of matching records.</returns>
         public virtual async Task<T?> GetAsync<T>(object id, CancellationToken cancellationToken = default) where T : class
-        {            
+        {
+            using Activity? activity = _activitySource.StartActivity("GetAsync");
+             
             string query = $"SELECT * FROM [dbo].[{TableName}] WHERE [{PrimaryKey}] = @{PrimaryKey}";
  
             DynamicParameters dynamicParameters = new DynamicParameters();
@@ -72,6 +78,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>A task representing the asynchronous operation, containing an <see cref="IEnumerable{T}"/> of the retrieved records.</returns>
         public virtual async Task<IEnumerable<T>> GetAsync<T>(CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("GetAsync");
+
             string query = $"SELECT * FROM [dbo].[{TableName}]";
  
             CommandDefinition commandDefinition = new CommandDefinition(query, cancellationToken: cancellationToken);
@@ -92,6 +100,8 @@ namespace FlightSearchEngine.Persistence
         /// <returns>A task representing the asynchronous operation, containing the filtered collection of entities.</returns>
         public virtual async Task<T?> GetAsync<T>(object id, string columnName, CancellationToken cancellationToken = default) where T : class
         {
+            using Activity? activity = _activitySource.StartActivity("GetAsync");
+
             string query = $"SELECT * FROM [dbo].[{TableName}] WHERE [{columnName}] = @{columnName}";
  
             DynamicParameters dynamicParameters = new DynamicParameters();
@@ -119,6 +129,8 @@ namespace FlightSearchEngine.Persistence
         /// </returns>
         public virtual async Task<int> UpdateAsync<T>(object Id, T entity, CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("UpdateAsync");
+
             CheckTransaction();
  
             IEnumerable<string> cols = GenerateListOfProperties<T>().Select(p => $"[{p}] = @{p}");
@@ -150,6 +162,8 @@ namespace FlightSearchEngine.Persistence
         /// </returns>
         public virtual async Task<int> DeleteAsync(object Id, CancellationToken cancellationToken = default)
         {
+            using Activity? activity = _activitySource.StartActivity("DeleteAsync");
+
             CheckTransaction();
  
             string query = $"DELETE FROM [dbo].[{TableName}] WHERE [{PrimaryKey}] = @{PrimaryKey}";
@@ -175,6 +189,8 @@ namespace FlightSearchEngine.Persistence
         /// </returns>
         private string GenerateInsertQuery<T>()
         {
+            using Activity? activity = _activitySource.StartActivity("GenerateInsertQuery");
+
             List<string> properties = GenerateListOfProperties<T>();
  
             IEnumerable<string> valuesCols = properties.Select(p => $"@{p}");
@@ -193,6 +209,8 @@ namespace FlightSearchEngine.Persistence
         /// </exception>
         private void CheckTransaction()
         {
+            using Activity? activity = _activitySource.StartActivity("CheckTransaction");
+            
             if (_dbTransaction == null)
                 throw new InvalidOperationException("The transaction can't not be null for this operation");
         }

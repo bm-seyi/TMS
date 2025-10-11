@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Confluent.Kafka;
 using SignalR.Hubs;
 using Core.Interfaces.Factories;
+using System.Diagnostics;
 
 namespace WorkerService.BackgroundServices
 {
@@ -11,6 +12,7 @@ namespace WorkerService.BackgroundServices
         private readonly IHubContext<LinesHub> _hubContext;
         private readonly IKafkaService _kafkaService;
         private readonly IConfiguration _configuration;
+        private static readonly ActivitySource _activitySource = new ActivitySource("WorkerService.BackgroundServices.LinesWorker");
 
         public LinesWorker(ILogger<LinesWorker> logger, IHubContext<LinesHub> hubContext, IKafkaService kafkaService, IConfiguration configuration)
         {
@@ -22,6 +24,8 @@ namespace WorkerService.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            using Activity? activity = _activitySource.StartActivity("ExecuteAsync");
+            
             string bootstrapServers = _configuration.GetValue<string>("Kafka:BootstrapServers") ?? throw new InvalidOperationException("Kafka BootstrapServers configuration is missing.");
             await _kafkaService.CreateTopicAsync("sqlserver.TMS.dbo.Lines", bootstrapServers);
 

@@ -70,7 +70,16 @@ public static class Extensions
                     )
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddSqlClientInstrumentation();
+
+                tracing.AddSource("Core.Factories.SqlDatabaseFactory");
+                tracing.AddSource("Core.Services.KafkaService");
+
+                tracing.AddSource("Persistence.UnitofWork");
+                tracing.AddSource("Persistence.Repositories.LinesRepository");
+                
+                tracing.AddSource("WorkerService.BackgroundServices.LinesWorker");
             });
 
         builder.AddOpenTelemetryExporters();

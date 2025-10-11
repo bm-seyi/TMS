@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Core.Interfaces.Factories;
@@ -8,6 +9,7 @@ namespace Core.Services
     public sealed class KafkaService : IKafkaService
     {
         private readonly ILogger<KafkaService> _logger;
+        private static readonly ActivitySource _activitySource = new ActivitySource("Core.Services.KafkaService");
 
         public KafkaService(ILogger<KafkaService> logger)
         {
@@ -16,6 +18,8 @@ namespace Core.Services
 
         public async Task CreateTopicAsync(string topicName, string bootstrapServers)
         {
+            using Activity? activity = _activitySource.StartActivity("CreateTopicAsync");
+
             _logger.LogInformation("Creating Kafka topic: {TopicName}", topicName);
 
             AdminClientConfig adminConfig = new AdminClientConfig
@@ -61,6 +65,8 @@ namespace Core.Services
 
         public IConsumer<Ignore, string> CreateConsumer(string bootstrapServers, string groupId)
         {
+            using Activity? activity = _activitySource.StartActivity("CreateConsumer");
+            
             ConsumerConfig consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = bootstrapServers,
