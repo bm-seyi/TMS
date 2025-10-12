@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tms-api.fullname" . }}
+  name: {{ include "tms-workerService.fullname" . }}
   labels:
-    {{- include "tms-api.labels" . | nindent 4 }}
+    {{- include "tms-workerService.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tms-api.selectorLabels" . | nindent 6 }}
+      {{- include "tms-workerService.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tms-api.labels" . | nindent 8 }}
+        {{- include "tms-workerService.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "tms-api.serviceAccountName" . }}
+      serviceAccountName: {{ include "tms-workerService.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -62,7 +62,7 @@ spec:
           {{- end }}
           envFrom:
             - secretRef:
-                name: {{ include "tms-api.fullname" . }}-secrets
+                name: {{ include "tms-workerService.fullname" . }}-secrets
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
