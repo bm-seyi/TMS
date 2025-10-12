@@ -12,7 +12,7 @@
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     
-    <UserSecretsId>646626df-4cf2-45b1-936e-a141fc088a30</UserSecretsId>
+    <UserSecretsId>4e6745cf-f261-4897-8fd8-5b076885a0ef</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
