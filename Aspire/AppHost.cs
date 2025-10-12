@@ -47,8 +47,14 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
         x.Port = 29092;
     });
 
+IResourceBuilder<ParameterResource> redisPassword = builder.AddParameter("redisPassword", secret: true);
+
+IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379,  redisPassword)
+    .WithLifetime(ContainerLifetime.Session);
+
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<SignalR>("SignalR")
-    .WaitFor(devServer);
+    .WaitFor(devServer)
+    .WaitFor(redis);
 
 builder.AddProject<WorkerService>("WorkerService")
     .WaitFor(signalR)
