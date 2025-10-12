@@ -13,3 +13,5 @@ TMS_API.http
 tempkey.jwk
 node_modules/
 Aspire/resources/kafka/sqlserver-connector.json
+
+values.dev.yaml
