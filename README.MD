@@ -4,13 +4,22 @@
 
 This project is an ASP.NET application that utilizes SignalR for real-time communication with a Transportation Management System (TMS) application built using .NET MAUI. SignalR is used to provide seamless and low-latency data exchange between the backend ASP.NET server and the TMS mobile app, enabling features like real-time updates, notifications, and bidirectional communication.
 
-## Features
-- **Scalable SignalR Hub:** SignalR hub configured to handle multiple simultaneous connections, supporting large-scale communication needs.
-- **Customizable APIs:** REST APIs can be easily added to the backend to complement SignalR communication, allowing for additional functionality such as data retrieval or submission.
+## Building Docker Images
+Images can be built using
 
-## Roadmap
-- **SignalR Integration:** Completed integration of SignalR on both the ASP.NET backend and the TMS mobile app.
-- **Backend API:** Basic setup of SignalR hub and backend API endpoints.
+```PowerShell
+docker build -t <name>:<tag> -f <relative-path-to-Dockerfile> .
+```
+
+#### Example:
+```PowerShell
+docker build -t tms-workerservice:latest -f Docker/Dockerfile.TMS-WorkerService .
+```
+
+#### Notes:
+- `<name>`: The name of your Docker image (e.g., tms-workerservice)
+- `<tag>`: The image version tag (e.g., latest)
+- `<relative-path-to-Dockerfile>`: Path to your Dockerfile relative to the project root
 
 ## License
 
