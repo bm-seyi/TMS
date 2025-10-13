@@ -1,4 +1,5 @@
-using Microsoft.Identity.Client;
+using Core.Interfaces.Persistence;
+using Persistence;
 using SignalR.Hubs;
 using StackExchange.Redis;
 
@@ -12,7 +13,7 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
-string redisPassword = builder.Configuration.GetValue<string>("Parameters:RedisPassword") ?? throw new InvalidOperationException("Redis connection string is not configured.");
+string redisPassword = builder.Configuration.GetValue<string>("Parameters:RedisPassword") ?? throw new InvalidOperationException("Redis Password is not configured.");
 string redisEndpoint = builder.Configuration.GetValue<string>("Redis:Endpoint") ?? throw new InvalidOperationException("Redis endpoint is not configured.");
 
 builder.Services.AddSignalR()
@@ -23,6 +24,9 @@ builder.Services.AddSignalR()
         options.Configuration.EndPoints.Add(redisEndpoint);
         options.Configuration.ChannelPrefix = RedisChannel.Literal("TMS");
     });
+
+
+builder.Services.AddTransient<IUnitofWork, UnitofWork>();
 
 WebApplication app = builder.Build();
 

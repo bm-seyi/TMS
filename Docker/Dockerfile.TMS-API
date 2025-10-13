@@ -1,0 +1,34 @@
+# Use the official ASP.NET Core runtime as the base image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.9 AS base
+WORKDIR /app
+EXPOSE 8080
+
+# Use the official .NET SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS build
+WORKDIR /src
+
+# Copy solution and project files
+COPY TMS.slnx ./
+COPY API/API.csproj API/
+COPY ServiceDefaults/ServiceDefaults.csproj ServiceDefaults/
+
+# Restore dependencies
+RUN dotnet restore API/API.csproj
+RUN dotnet restore ServiceDefaults/ServiceDefaults.csproj
+
+# Copy the rest of the source code
+COPY API/ API/
+COPY ServiceDefaults/ ServiceDefaults/
+
+# Build the application
+RUN dotnet build API/API.csproj -c Release -o /app/build
+
+# Publish the application
+FROM build AS publish
+RUN dotnet publish API/API.csproj -c Release -o /app/publish
+
+# Use the runtime image to serve the app
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "API.dll"]

@@ -1,0 +1,43 @@
+# Use the official ASP.NET Core runtime as the base image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.9 AS base
+WORKDIR /app
+EXPOSE 8080
+
+# Use the official .NET SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS build
+WORKDIR /src
+
+# Copy solution and project files
+COPY TMS.slnx ./
+COPY SignalR/SignalR.csproj SignalR/
+COPY Models/Models.csproj Models/
+COPY Core/Core.csproj Core/
+COPY Persistence/Persistence.csproj Persistence/
+COPY ServiceDefaults/ServiceDefaults.csproj ServiceDefaults/
+
+# Restore dependencies
+RUN dotnet restore SignalR/SignalR.csproj
+RUN dotnet restore Models/Models.csproj
+RUN dotnet restore Core/Core.csproj
+RUN dotnet restore Persistence/Persistence.csproj
+RUN dotnet restore ServiceDefaults/ServiceDefaults.csproj
+
+# Copy the rest of the source code
+COPY SignalR/ SignalR/
+COPY Models/ Models/
+COPY Persistence/ Persistence/
+COPY Core/ Core/
+COPY ServiceDefaults/ ServiceDefaults/
+
+# Build the application
+RUN dotnet build SignalR/SignalR.csproj -c Release -o /app/build
+
+# Publish the application
+FROM build AS publish
+RUN dotnet publish SignalR/SignalR.csproj -c Release -o /app/publish
+
+# Use the runtime image to serve the app
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "SignalR.dll"]
