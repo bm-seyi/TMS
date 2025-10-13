@@ -14,4 +14,4 @@ tempkey.jwk
 node_modules/
 Aspire/resources/kafka/sqlserver-connector.json
 
-values.dev.yaml
+k8s/helm/environments/dev/*.yaml
