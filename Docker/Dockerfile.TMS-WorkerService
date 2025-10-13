@@ -1,0 +1,43 @@
+# Use the official ASP.NET Core runtime as the base image
+FROM mcr.microsoft.com/dotnet/runtime:9.0.9 AS base
+WORKDIR /app
+EXPOSE 8080
+
+# Use the official .NET SDK image to build the app
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS build
+WORKDIR /src
+
+# Copy solution and project files
+COPY TMS.slnx ./
+COPY WorkerService/WorkerService.csproj WorkerService/
+COPY Core/Core.csproj Core/
+COPY Persistence/Persistence.csproj Persistence/
+COPY Models/Models.csproj Models/
+COPY ServiceDefaults/ServiceDefaults.csproj ServiceDefaults/
+
+# Restore dependencies
+RUN dotnet restore WorkerService/WorkerService.csproj
+RUN dotnet restore Core/Core.csproj
+RUN dotnet restore Persistence/Persistence.csproj
+RUN dotnet restore Models/Models.csproj
+RUN dotnet restore ServiceDefaults/ServiceDefaults.csproj
+
+# Copy the rest of the source code
+COPY WorkerService/ WorkerService/
+COPY Core/ Core/
+COPY Models/ Models/
+COPY Persistence/ Persistence/
+COPY ServiceDefaults/ ServiceDefaults/
+
+# Build the application
+RUN dotnet build WorkerService/WorkerService.csproj -c Release -o /app/build
+
+# Publish the application
+FROM build AS publish
+RUN dotnet publish WorkerService/WorkerService.csproj -c Release -o /app/publish
+
+# Use the runtime image to serve the app
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "WorkerService.dll"]
