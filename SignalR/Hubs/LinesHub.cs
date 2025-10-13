@@ -23,8 +23,6 @@ namespace SignalR.Hubs
             IEnumerable<LinesReadDto> lines = await _unitOfWork.Lines.GetAsync<LinesReadDto>(Context.ConnectionAborted);
 
             await Clients.Caller.SendAsync("ReceiveLines", lines, Context.ConnectionAborted);
-
-            await base.OnConnectedAsync();
         }
     }
 }

@@ -63,6 +63,9 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "tms-api.fullname" . }}-secrets
+          env:
+            {{- toYaml .Values.env | nindent 6 }}
+
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
