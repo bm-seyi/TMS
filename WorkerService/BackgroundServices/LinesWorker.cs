@@ -1,8 +1,9 @@
-using Confluent.Kafka;
-using Core.Interfaces.Factories;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
+using Confluent.Kafka;
+using Core.Interfaces.Factories;
+
 
 namespace WorkerService.BackgroundServices
 {
@@ -43,8 +44,7 @@ namespace WorkerService.BackgroundServices
 
                 await _hubConnection.SendAsync("ReceiveLineUpdate", consumeResult.Message.Value, stoppingToken);
                 _logger.LogInformation("ReceiveLineUpdate sent to clients");
-
             }
-        }    
+        }
     }
 }
