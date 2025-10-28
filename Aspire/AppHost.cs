@@ -50,6 +50,7 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
 IResourceBuilder<ParameterResource> redisPassword = builder.AddParameter("redisPassword", secret: true);
 
 IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379,  redisPassword)
+    .WithRedisInsight()
     .WithLifetime(ContainerLifetime.Session);
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<SignalR>("SignalR")
