@@ -1,3 +1,6 @@
+using API.ExceptionHandlers;
+using API.Middleware;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
@@ -8,11 +11,14 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 
 WebApplication app = builder.Build();
@@ -20,12 +26,14 @@ WebApplication app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
 }
 
+app.UseMiddleware<TraceMiddleware>();
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
