@@ -42,7 +42,7 @@ namespace API.ExceptionHandlers
                 )
             };
 
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Replace("\r", "").Replace("\n", ""));
 
             httpContext.Response.StatusCode = statusCode;
             await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
