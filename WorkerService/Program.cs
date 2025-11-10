@@ -1,3 +1,4 @@
+using Core.Extensions;
 using Core.Factories;
 using Core.Interfaces.Factories;
 using Core.Services;
@@ -16,8 +17,8 @@ builder.AddServiceDefaults();
 builder.Services.AddLogging();
 builder.Services.AddHostedService<LinesWorker>();
 
-builder.Services.AddSingleton<IKafkaService, KafkaService>();
-builder.Services.AddSingleton<IHubConnectionFactory, HubConnectionFactory>();
+builder.Services.AddKafkaService();
+builder.Services.AddHubConnectionFactory();
 
 IHost host = builder.Build();
 
