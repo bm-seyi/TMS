@@ -4,13 +4,12 @@ using Microsoft.Extensions.Logging;
 using Core.Interfaces.Factories;
 using System.Diagnostics;
 
-
 namespace Core.Factories
 {
     /// <summary>
     /// Handles Database connection creation
     /// </summary>
-    public class SqlDatabaseFactory : ISqlDatabaseFactory
+    internal sealed class SqlDatabaseFactory : ISqlDatabaseFactory
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<SqlDatabaseFactory> _logger;
