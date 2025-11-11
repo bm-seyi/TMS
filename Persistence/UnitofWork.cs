@@ -4,7 +4,6 @@ using System.Data.Common;
 using System.Diagnostics;
 using Core.Interfaces.Persistence;
 using Core.Interfaces.Factories;
-using Persistence.Repositories;
 
 
 namespace Persistence
@@ -27,8 +26,6 @@ namespace Persistence
         }
 
         private SqlConnection sqlConnection => _lazyConnection.Value;
-
-        public IRepository Lines => new LinesRepository(sqlConnection, sqlTransaction) { TableName = "Lines" , PrimaryKey = "Id" };
 
         /// <summary>
         /// Asynchronously opens the SQL database connection.
@@ -139,7 +136,5 @@ namespace Persistence
 
             GC.SuppressFinalize(this);
         }
-        
-   
     }
 }
