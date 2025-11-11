@@ -1,9 +1,10 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
-using System.Diagnostics;
 using Core.Interfaces.Persistence;
 using Core.Interfaces.Factories;
+using System.Diagnostics;
+using Persistence.Repositories;
 
 
 namespace Persistence
@@ -27,6 +28,8 @@ namespace Persistence
 
         private SqlConnection sqlConnection => _lazyConnection.Value;
 
+        public IRepository Lines => new LinesRepository(sqlConnection, sqlTransaction) { TableName = "Lines" , PrimaryKey = "Id" };
+
         /// <summary>
         /// Asynchronously opens the SQL database connection.
         /// </summary>
@@ -37,7 +40,7 @@ namespace Persistence
         /// </remarks>
         public async Task OpenAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("UnitofWork.OpenAsync");
+            using Activity? activity = _activitySource.StartActivity("OpenAsync");
 
             if (sqlConnection.State != System.Data.ConnectionState.Open)
             {
@@ -52,7 +55,7 @@ namespace Persistence
         /// <returns>Returns Task</returns>
         public async Task BeginAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("UnitofWork.BeginAsync");
+            using Activity? activity = _activitySource.StartActivity("BeginAsync");
 
             await OpenAsync(cancellationToken);
 
@@ -67,7 +70,7 @@ namespace Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("UnitofWork.CommitAsync");
+            using Activity? activity = _activitySource.StartActivity("CommitAsync");
 
             if (sqlTransaction == null)
                 throw new InvalidOperationException("Ensure 'BeginAsync' is called before 'CommitAsync' to allow a valid connection and transaction to be created.");
@@ -96,7 +99,7 @@ namespace Persistence
         /// <returns>Returns a Task</returns>
         public async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("UnitofWork.RollbackAsync");
+            using Activity? activity = _activitySource.StartActivity("RollbackAsync");
 
             if (sqlTransaction is null)
                 throw new InvalidOperationException("Transaction has not been started.");
@@ -114,25 +117,22 @@ namespace Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async ValueTask DisposeAsync()
         {
-            using Activity? activity = _activitySource.StartActivity("UnitofWork.DisposeAsync");
+            using Activity? activity = _activitySource.StartActivity("DisposeAsync");
 
-            if (_lazyConnection.IsValueCreated)
+            if (sqlTransaction != null)
             {
-                if (sqlTransaction != null)
-                {
-                    await sqlTransaction.DisposeAsync();
-                    _logger.LogInformation("The Transaction was disposed");
-                }
-
-                if (sqlConnection.State != System.Data.ConnectionState.Closed)
-                {
-                    await sqlConnection.CloseAsync();
-                    _logger.LogInformation("The SQL Connection was closed");
-                }
-
-                await sqlConnection.DisposeAsync();
-                _logger.LogInformation("The SQL Connection was disposed");
+                await sqlTransaction.DisposeAsync();
+                _logger.LogInformation("The Transaction was disposed");
             }
+
+            if (sqlConnection.State != System.Data.ConnectionState.Closed)
+            {
+                await sqlConnection.CloseAsync();
+                _logger.LogInformation("The SQL Connection was closed");
+            }
+
+            await sqlConnection.DisposeAsync();
+            _logger.LogInformation("The SQL Connection was disposed");
 
             GC.SuppressFinalize(this);
         }
