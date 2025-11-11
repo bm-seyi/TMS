@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Factories
 {
-    internal sealed class HubConnectionFactory : IHubConnectionFactory
+    public sealed class HubConnectionFactory : IHubConnectionFactory
     {
         private readonly ILogger<HubConnectionFactory> _logger;
         private readonly string _signalrUrl;

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services
 {
-    internal sealed class KafkaService : IKafkaService
+    public sealed class KafkaService : IKafkaService
     {
         private readonly ILogger<KafkaService> _logger;
         private static readonly ActivitySource _activitySource = new ActivitySource("Core.Services.KafkaService");
