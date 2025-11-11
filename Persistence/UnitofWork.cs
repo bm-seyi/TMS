@@ -1,13 +1,10 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
-using Dapper;
+using System.Diagnostics;
 using Core.Interfaces.Persistence;
 using Core.Interfaces.Factories;
-using Models.Dtos;
 using Persistence.Repositories;
-using System.Diagnostics;
-
 
 
 namespace Persistence
@@ -18,7 +15,7 @@ namespace Persistence
     public class UnitofWork : IUnitofWork
     {
         private readonly ILogger<UnitofWork> _logger;
-        private readonly SqlConnection _sqlConnection;
+        private readonly Lazy<SqlConnection> _lazyConnection;
         private DbTransaction? sqlTransaction;
         private static readonly ActivitySource _activitySource = new ActivitySource("Persistence.UnitofWork");
         public UnitofWork(ISqlDatabaseFactory sqlDatabaseFactory, ILogger<UnitofWork> logger)
@@ -26,10 +23,12 @@ namespace Persistence
             _ = sqlDatabaseFactory ?? throw new ArgumentNullException(nameof(sqlDatabaseFactory));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            _sqlConnection = sqlDatabaseFactory.CreateConnection("DefaultConnection");
+            _lazyConnection = new Lazy<SqlConnection>(() => sqlDatabaseFactory.CreateConnection("DefaultConnection"));
         }
 
-        public IRepository Lines => new LinesRepository(_sqlConnection, sqlTransaction) { TableName = "Lines" , PrimaryKey = "Id" };
+        private SqlConnection sqlConnection => _lazyConnection.Value;
+
+        public IRepository Lines => new LinesRepository(sqlConnection, sqlTransaction) { TableName = "Lines" , PrimaryKey = "Id" };
 
         /// <summary>
         /// Asynchronously opens the SQL database connection.
@@ -41,10 +40,13 @@ namespace Persistence
         /// </remarks>
         public async Task OpenAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("OpenAsync");
+            using Activity? activity = _activitySource.StartActivity("UnitofWork.OpenAsync");
 
-            await _sqlConnection.OpenAsync(cancellationToken);
-            _logger.LogDebug("Connection to database has successfully been opened.");
+            if (sqlConnection.State != System.Data.ConnectionState.Open)
+            {
+                await sqlConnection.OpenAsync(cancellationToken);
+                _logger.LogDebug("Connection to database opened.");
+            }
         }
 
         /// <summary>
@@ -53,12 +55,12 @@ namespace Persistence
         /// <returns>Returns Task</returns>
         public async Task BeginAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("BeginAsync");
+            using Activity? activity = _activitySource.StartActivity("UnitofWork.BeginAsync");
 
             await OpenAsync(cancellationToken);
 
-            sqlTransaction = await _sqlConnection.BeginTransactionAsync(cancellationToken);
-            _logger.LogDebug("A transaction has successfully been created.");
+            sqlTransaction = await sqlConnection.BeginTransactionAsync(cancellationToken);
+            _logger.LogDebug("A transaction has been created.");
         }
 
         /// <summary>
@@ -68,34 +70,25 @@ namespace Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("CommitAsync");
+            using Activity? activity = _activitySource.StartActivity("UnitofWork.CommitAsync");
 
+            if (sqlTransaction == null)
+                throw new InvalidOperationException("Ensure 'BeginAsync' is called before 'CommitAsync' to allow a valid connection and transaction to be created.");
+            
             try
             {
-                if (sqlTransaction == null)
-                {
-                    throw new InvalidOperationException("Ensure 'BeginAsync' is called before 'CommitAsync' to allow a valid connection and transaction to be created.");
-                }
-
-                try
-                {
-                    await sqlTransaction.CommitAsync(cancellationToken);
-                    _logger.LogDebug("The Transaction has successfully been committed.");
-                }
-                catch (Exception ex)
-                {
-                    await sqlTransaction.RollbackAsync(cancellationToken);
-                    _logger.LogWarning(ex, "Error occurred during transaction commit.");
-                }
-                finally
-                {
-                    await sqlTransaction.DisposeAsync();
-                    _logger.LogDebug("The Transaction has successfully been disposed.");
-                }
+                await sqlTransaction.CommitAsync(cancellationToken);
+                _logger.LogDebug("Transaction committed.");
+            }
+            catch (Exception ex)
+            {
+                await sqlTransaction.RollbackAsync(cancellationToken);
+                _logger.LogWarning(ex, "Error during commit; rolled back.");
             }
             finally
             {
-                await CloseAsync();
+                await sqlTransaction.DisposeAsync();
+                sqlTransaction = null;
             }
 
         }
@@ -106,22 +99,15 @@ namespace Persistence
         /// <returns>Returns a Task</returns>
         public async Task RollbackAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("RollbackAsync");
+            using Activity? activity = _activitySource.StartActivity("UnitofWork.RollbackAsync");
 
-            try
-            {
-                if (sqlTransaction == null)
-                {
-                    throw new InvalidOperationException("Ensure 'BeginAsync' is called before 'CommitAsync' to allow a valid connection and transaction to be created.");
-                }
+            if (sqlTransaction is null)
+                throw new InvalidOperationException("Transaction has not been started.");
 
-                await sqlTransaction.RollbackAsync(cancellationToken);
-                _logger.LogWarning("A Rollback occurred on the Transaction");
-            }
-            catch
-            {
-                await CloseAsync();
-            }
+            await sqlTransaction.RollbackAsync(cancellationToken);
+            _logger.LogWarning("Transaction rolled back.");
+            await sqlTransaction.DisposeAsync();
+            sqlTransaction = null;
         }
 
         /// <summary>
@@ -131,59 +117,29 @@ namespace Persistence
         /// <exception cref="InvalidOperationException"></exception>
         public async ValueTask DisposeAsync()
         {
-            using Activity? activity = _activitySource.StartActivity("DisposeAsync");
+            using Activity? activity = _activitySource.StartActivity("UnitofWork.DisposeAsync");
 
-            if (sqlTransaction != null)
+            if (_lazyConnection.IsValueCreated)
             {
-                await sqlTransaction.DisposeAsync();
-                _logger.LogInformation("The Transaction was successfully disposed");
+                if (sqlTransaction != null)
+                {
+                    await sqlTransaction.DisposeAsync();
+                    _logger.LogInformation("The Transaction was disposed");
+                }
+
+                if (sqlConnection.State != System.Data.ConnectionState.Closed)
+                {
+                    await sqlConnection.CloseAsync();
+                    _logger.LogInformation("The SQL Connection was closed");
+                }
+
+                await sqlConnection.DisposeAsync();
+                _logger.LogInformation("The SQL Connection was disposed");
             }
-            
-            await CloseAsync();
+
+            GC.SuppressFinalize(this);
         }
         
    
-        /// <summary>
-        /// Asynchronously performs a health check on the current SQL Server database by querying its name and status.
-        /// </summary>
-        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation. The task result contains a <see cref="DatabaseHealthCheckDto"/>
-        /// with the database name and its current status.
-        /// </returns>
-        public async Task<DatabaseHealthCheckDto> HealthCheckAsync(CancellationToken cancellationToken = default)
-        {
-            using Activity? activity = _activitySource.StartActivity("HealthCheckAsync");
-
-            string query = "SELECT [name] AS [DatabaseName], [state_desc] AS [Status] FROM sys.databases WHERE [name] = DB_NAME();";
-            if (_sqlConnection.State == System.Data.ConnectionState.Closed)
-            {
-                await _sqlConnection.OpenAsync(cancellationToken);
-            }
-
-            CommandDefinition commandDefinition = new CommandDefinition(query, cancellationToken: cancellationToken);
-            IEnumerable<DatabaseHealthCheckDto> healthCheckDtos = await _sqlConnection.QueryAsync<DatabaseHealthCheckDto>(commandDefinition);
-
-            DatabaseHealthCheckDto databaseHealthCheck = healthCheckDtos.FirstOrDefault() ?? new DatabaseHealthCheckDto() { DatabaseName = _sqlConnection.Database, Status = "Unknown" };
-            _logger.LogDebug("HEALTH CHECK --- Database: {0}, Status: {1}", databaseHealthCheck.DatabaseName, databaseHealthCheck.Status);
-
-            return databaseHealthCheck;
-        }
-
-        /// <summary>
-        /// A Helper Method to close and dispose Sql Connections
-        /// </summary>
-        /// <returns>Returns Task</returns>
-        public async Task CloseAsync()
-        {
-            using Activity? activity = _activitySource.StartActivity("CloseAsync");
-            
-            if (_sqlConnection.State != System.Data.ConnectionState.Closed)
-            {
-                await _sqlConnection.CloseAsync();
-                await _sqlConnection.DisposeAsync();
-                _logger.LogInformation("The Sql Connection has successfully been closed");
-            }
-        }
     }
 }
