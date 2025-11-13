@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,15 +74,8 @@ public static class Extensions
                     //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()
-                    .AddRedisInstrumentation();
-
-                tracing.AddSource("Core.Factories.SqlDatabaseFactory");
-                tracing.AddSource("Core.Services.KafkaService");
-
-                tracing.AddSource("Persistence.UnitofWork");
-                tracing.AddSource("Persistence.Repositories.LinesRepository");
-                
-                tracing.AddSource("WorkerService.BackgroundServices.LinesWorker");
+                    .AddRedisInstrumentation()
+                    .AddActivitySources();
             });
 
         builder.AddOpenTelemetryExporters();
@@ -133,5 +128,33 @@ public static class Extensions
         }
 
         return app;
+    }
+
+    public static TracerProviderBuilder AddActivitySources(this TracerProviderBuilder builder)
+    {
+        Assembly? assembly = Assembly.GetEntryAssembly();
+
+        if (assembly == null)
+            return builder;
+
+        string assemblyNamePrefix = assembly.FullName?.Split('.')[0] ?? throw new InvalidOperationException($"Failed to retrieve assembly name: {assembly?.GetName().Name ?? "<unknown>"} (FullName was null or empty).");
+
+        IList<Assembly> assemblies = [.. assembly.GetReferencedAssemblies().Where(x => x.Name != null && x.Name.StartsWith(assemblyNamePrefix)).Select(Assembly.Load).Prepend(assembly)];
+
+        foreach (var type in assemblies.SelectMany(x => x.GetTypes()))
+        {
+            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+            {
+                if (field.FieldType == typeof(ActivitySource))
+                {
+                    ActivitySource? value = field.GetValue(null) as ActivitySource;
+
+                    if (value != null)
+                        builder.AddSource(value.Name);
+                }
+            }
+        }
+        
+        return builder;
     }
 }
