@@ -1,8 +1,8 @@
 using System.Data;
 using System.Diagnostics;
 using Dapper;
-using Models.Dtos;
 using TMS.Core.Interfaces.Persistence;
+using TMS.Models.DTOs;
 
 namespace TMS.Persistence
 {
@@ -20,13 +20,13 @@ namespace TMS.Persistence
         }
  
 
-        public async Task<DatabaseHealthCheckDto> Usp_DatabaseHealthCheckAsync(CancellationToken cancellationToken = default)
+        public async Task<DatabaseHealthCheckDTO> Usp_DatabaseHealthCheckAsync(CancellationToken cancellationToken = default)
         {
             using Activity? activity = _activitySource.StartActivity("Procedures.Usp_DatabaseHealthCheckAsync");
             await _unitofWork.OpenAsync();
  
             CommandDefinition commandDefinition = new CommandDefinition("usp_DatabaseHealthCheck", null, _unitofWork.sqlTransaction, commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken);
-            return await _unitofWork.sqlConnection.QuerySingleAsync<DatabaseHealthCheckDto>(commandDefinition);
+            return await _unitofWork.sqlConnection.QuerySingleAsync<DatabaseHealthCheckDTO>(commandDefinition);
         }
     }
 }

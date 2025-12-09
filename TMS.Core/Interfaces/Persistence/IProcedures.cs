@@ -1,9 +1,9 @@
-using Models.Dtos;
+using TMS.Models.DTOs;
 
 namespace TMS.Core.Interfaces.Persistence
 {
     public interface IProcedures
     {
-        Task<DatabaseHealthCheckDto> Usp_DatabaseHealthCheckAsync(CancellationToken cancellationToken);
+        Task<DatabaseHealthCheckDTO> Usp_DatabaseHealthCheckAsync(CancellationToken cancellationToken);
     }
 }

@@ -1,6 +1,6 @@
-namespace Models.Dtos
+namespace TMS.Models.DTOs
 {
-    public sealed record LinesReadDto
+    public sealed record LinesReadDTO
     {
         public Guid Id { get; init; }
         public required string OPM_Id { get; init; }
