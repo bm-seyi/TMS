@@ -1,12 +1,12 @@
 <Solution>
-  <Project Path="API/API.csproj" />
-  <Project Path="Aspire/Aspire.csproj" />
-  <Project Path="Core/Core.csproj" />
-  <Project Path="IntegrationTests/IntegrationTests.csproj" />
-  <Project Path="Models/Models.csproj" />
-  <Project Path="Persistence/Persistence.csproj" />
-  <Project Path="ServiceDefaults/ServiceDefaults.csproj" />
-  <Project Path="SignalR/SignalR.csproj" />
-  <Project Path="UnitTests/UnitTests.csproj" />
-  <Project Path="WorkerService/WorkerService.csproj" />
+  <Project Path="TMS.API/TMS.API.csproj" />
+  <Project Path="TMS.Aspire.AppHost/TMS.Aspire.AppHost.csproj" />
+  <Project Path="TMS.Aspire.ServiceDefaults/TMS.Aspire.ServiceDefaults.csproj" />
+  <Project Path="TMS.Core/TMS.Core.csproj" />
+  <Project Path="TMS.IntegrationTests/TMS.IntegrationTests.csproj" />
+  <Project Path="TMS.Models/TMS.Models.csproj" />
+  <Project Path="TMS.Persistence/TMS.Persistence.csproj" />
+  <Project Path="TMS.SignalR/TMS.SignalR.csproj" />
+  <Project Path="TMS.UnitTests/TMS.UnitTests.csproj" />
+  <Project Path="TMS.WorkerService/TMS.WorkerService.csproj" />
 </Solution>
