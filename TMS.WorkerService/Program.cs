@@ -1,7 +1,5 @@
-using Core.Factories;
-using Core.Interfaces.Factories;
-using Core.Services;
 using WorkerService.BackgroundServices;
+using TMS.Core.Extensions;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
@@ -16,8 +14,8 @@ builder.AddServiceDefaults();
 builder.Services.AddLogging();
 builder.Services.AddHostedService<LinesWorker>();
 
-builder.Services.AddSingleton<IKafkaService, KafkaService>();
-builder.Services.AddSingleton<IHubConnectionFactory, HubConnectionFactory>();
+builder.Services.AddKafkaService();
+builder.Services.AddHubConnectionFactory();
 
 IHost host = builder.Build();
 

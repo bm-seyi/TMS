@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Core.Interfaces.Factories
+namespace TMS.Core.Interfaces.Factories
 {
     public interface IHubConnectionFactory
     {

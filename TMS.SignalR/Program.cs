@@ -1,9 +1,6 @@
-using Core.Factories;
-using Core.Interfaces.Factories;
-using Core.Interfaces.Persistence;
-using Persistence;
 using SignalR.Hubs;
 using StackExchange.Redis;
+using TMS.Persistence.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +24,8 @@ builder.Services.AddSignalR()
         options.Configuration.ChannelPrefix = RedisChannel.Literal("TMS");
     });
 
-builder.Services.AddSingleton<ISqlDatabaseFactory, SqlDatabaseFactory>();
-builder.Services.AddTransient<IUnitofWork, UnitofWork>();
+builder.Services.AddSqlConnectionFactory();
+builder.Services.AddUnitOfWork();
 
 WebApplication app = builder.Build();
 

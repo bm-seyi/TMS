@@ -1,11 +1,11 @@
-using Core.Interfaces.Factories;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using TMS.Core.Interfaces.Factories;
 
-namespace Core.Factories
+namespace TMS.Core.Factories
 {
-    public sealed class HubConnectionFactory : IHubConnectionFactory
+    internal sealed class HubConnectionFactory : IHubConnectionFactory
     {
         private readonly ILogger<HubConnectionFactory> _logger;
         private readonly string _signalrUrl;

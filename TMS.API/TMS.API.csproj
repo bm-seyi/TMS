@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

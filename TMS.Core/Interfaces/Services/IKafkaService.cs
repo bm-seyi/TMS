@@ -1,6 +1,6 @@
 using Confluent.Kafka;
 
-namespace Core.Interfaces.Factories
+namespace TMS.Core.Interfaces.Services
 {
     public interface IKafkaService
     {

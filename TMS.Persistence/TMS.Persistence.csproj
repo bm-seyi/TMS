@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\TMS.Core.csproj" />
-    <ProjectReference Include="..\Models\TMS.Models.csproj" />
+    <ProjectReference Include="..\TMS.Core\TMS.Core.csproj" />
+    <ProjectReference Include="..\TMS.Models\TMS.Models.csproj" />
   </ItemGroup>
 
 </Project>

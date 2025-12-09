@@ -1,15 +1,16 @@
 using System.Diagnostics;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
-using Core.Interfaces.Factories;
 using Microsoft.Extensions.Logging;
+using TMS.Core.Interfaces.Services;
 
-namespace Core.Services
+
+namespace TMS.Core.Services
 {
-    public sealed class KafkaService : IKafkaService
+    internal sealed class KafkaService : IKafkaService
     {
         private readonly ILogger<KafkaService> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("Core.Services.KafkaService");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Services.KafkaService");
 
         public KafkaService(ILogger<KafkaService> logger)
         {
