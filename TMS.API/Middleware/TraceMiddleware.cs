@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace API.Middleware
+namespace TMS.API.Middleware
 {
     public sealed class TraceMiddleware
     {

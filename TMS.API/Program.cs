@@ -1,5 +1,5 @@
-using API.ExceptionHandlers;
-using API.Middleware;
+using TMS.API.ExceptionHandlers;
+using TMS.API.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +11,7 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
+builder.Services.AddExceptionHandler<OperationCanceledHandler>();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
 
