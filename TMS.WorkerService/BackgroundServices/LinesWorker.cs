@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
 using Confluent.Kafka;
-using Core.Interfaces.Factories;
+using TMS.Core.Interfaces.Services;
+using TMS.Core.Interfaces.Factories;
 
 
 namespace WorkerService.BackgroundServices

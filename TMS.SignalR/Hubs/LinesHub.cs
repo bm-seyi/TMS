@@ -1,6 +1,6 @@
-using Core.Interfaces.Persistence;
 using Microsoft.AspNetCore.SignalR;
-using Models.Dtos;
+using TMS.Core.Interfaces.Persistence;
+using TMS.Models.DTOs;
 
 namespace SignalR.Hubs
 {
@@ -19,10 +19,8 @@ namespace SignalR.Hubs
         {
             _logger.LogInformation("Client connected to LinesHub: {ConnectionId}", Context.ConnectionId);
 
-            await _unitOfWork.OpenAsync();
-            IEnumerable<LinesReadDto> lines = await _unitOfWork.Lines.GetAsync<LinesReadDto>(Context.ConnectionAborted);
 
-            await Clients.Caller.SendAsync("ReceiveLines", lines, Context.ConnectionAborted);
+            await Clients.Caller.SendAsync("ReceiveLines", new {}, Context.ConnectionAborted);
         }
     }
 }
