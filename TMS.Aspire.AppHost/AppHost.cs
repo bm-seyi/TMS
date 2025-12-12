@@ -42,6 +42,7 @@ IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(devServer)
+    .WithReference(tmsDatabase, "DefaultConnection")
     .WaitFor(redis);
 
 builder.AddProject<TMS_WorkerService>("WorkerService")
