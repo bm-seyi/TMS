@@ -1,5 +1,4 @@
 using Aspire.Hosting;
-using Projects;
  
 namespace TMS.IntegrationTests.API.Endpoints
 {
@@ -14,7 +13,7 @@ namespace TMS.IntegrationTests.API.Endpoints
         public async Task HealthEndpoint_ShouldReturnSuccessStatusCode()
         {
             // Arrange
-            HttpClient httpClient = app.CreateHttpClient("TMS", "https");
+            HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
  
             // Act
             HttpResponseMessage httpResponseMessage = await httpClient.GetAsync("/health", TestContext.CancellationToken);
@@ -27,7 +26,7 @@ namespace TMS.IntegrationTests.API.Endpoints
         public async Task HealthEndpoint_ShouldReportDatabaseIsOnline()
         {
             // Arrange
-            HttpClient httpClient = app.CreateHttpClient("TMS", "https");
+            HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
             HttpResponseMessage response = await httpClient.GetAsync("/health", TestContext.CancellationToken);
             response.EnsureSuccessStatusCode();
  
@@ -45,7 +44,7 @@ namespace TMS.IntegrationTests.API.Endpoints
         public async Task HealthEndpoint_ShouldReportContainerResourceUsage()
         {
             // Arrange
-            HttpClient httpClient = app.CreateHttpClient("TMS", "https");
+            HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
             HttpResponseMessage response = await httpClient.GetAsync("/health", TestContext.CancellationToken);
             response.EnsureSuccessStatusCode();
  

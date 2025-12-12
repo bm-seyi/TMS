@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aspire\TMS.Aspire.AppHost.csproj" />
+    <ProjectReference Include="..\TMS.Aspire.AppHost\TMS.Aspire.AppHost.csproj" />
   </ItemGroup>
 
   <ItemGroup>

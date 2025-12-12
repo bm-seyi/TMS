@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\API\TMS.API.csproj" />
-    <ProjectReference Include="..\Core\TMS.Core.csproj" />
+    <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
+    <ProjectReference Include="..\TMS.Core\TMS.Core.csproj" />
+    <ProjectReference Include="..\TMS.Persistence\TMS.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

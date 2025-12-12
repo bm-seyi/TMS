@@ -1,20 +1,20 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Core.Factories;
+using TMS.Persistence.Factories;
 
-namespace UnitTests.Core.Factories
+namespace TMS.UnitTests.Persistence.Factories
 {
     [TestClass]
     public sealed class SqlDatabaseFactoryTests
     {
-        private Mock<ILogger<SqlDatabaseFactory>> mockLogger = null!;
+        private Mock<ILogger<SqlConnectionFactory>> mockLogger = null!;
         private Mock<IConfiguration> mockConfiguration = null!;
 
         [TestInitialize]
         public void Setup()
         {
-            mockLogger = new Mock<ILogger<SqlDatabaseFactory>>();
+            mockLogger = new Mock<ILogger<SqlConnectionFactory>>();
             mockConfiguration = new Mock<IConfiguration>();
         }
 
@@ -22,8 +22,8 @@ namespace UnitTests.Core.Factories
         public void ConstructorShouldThrowArgumentNullExceptionWhenDependenciesAreNull()
         {
             // Assert
-            Assert.Throws<ArgumentNullException>(() => new SqlDatabaseFactory(null!, mockLogger.Object));
-            Assert.Throws<ArgumentNullException>(() => new SqlDatabaseFactory(mockConfiguration.Object, null!));
+            Assert.Throws<ArgumentNullException>(() => new SqlConnectionFactory(null!, mockLogger.Object));
+            Assert.Throws<ArgumentNullException>(() => new SqlConnectionFactory(mockConfiguration.Object, null!));
         }
     }
 }

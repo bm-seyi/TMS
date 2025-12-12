@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
     <ProjectReference Include="..\TMS.SignalR\TMS.SignalR.csproj" />
     <ProjectReference Include="..\tMS.WorkerService\TMS.WorkerService.csproj" />
   </ItemGroup>

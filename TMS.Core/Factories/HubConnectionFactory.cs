@@ -20,7 +20,7 @@ namespace TMS.Core.Factories
         public HubConnection CreateConnection(string relativeHubUrl)
         {
             HubConnection hubConnection = new HubConnectionBuilder()
-            .WithUrl($"{_signalrUrl}{relativeHubUrl}")
+            .WithUrl($"{_signalrUrl}/{relativeHubUrl}")
             .WithAutomaticReconnect()
             .Build();
 

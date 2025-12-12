@@ -3,6 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TMS.API.ExceptionHandlers;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
+using TMS.Persistence.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 
+builder.Services.AddUnitOfWork();
+builder.Services.AddSqlConnectionFactory();
+
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +55,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseMiddleware<TraceMiddleware>();
+app.UseExceptionHandler();
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
@@ -66,13 +77,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions
         await context.Response.WriteAsJsonAsync(report);
     }
 });
-
-app.UseMiddleware<TraceMiddleware>();
-app.UseExceptionHandler();
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllers();
 

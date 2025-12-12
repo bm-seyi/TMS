@@ -1,17 +1,22 @@
-name: Run MsTest Unit Tests
+name: Run MsTest Integration Tests
 
 permissions:
   contents: read
 
 on:
     pull_request:
+        branches:
+            - master
     workflow_dispatch:
 
 
 jobs:
     build-and-test: 
-        name: MsTest Unit Tests
+        name: MsTest Integration Tests
         runs-on: ubuntu-latest
+        env: 
+            Parameter__DevServerPassword: testpassword
+            Parameter__redisPassword: testpassword
 
         steps:
             - name: Checkout Repository
@@ -29,4 +34,4 @@ jobs:
               run: dotnet build --no-restore
 
             - name: Run Tests
-              run: dotnet test ./TMS.UnitTests/TMS.UnitTests.csproj --verbosity normal
+              run: dotnet test ./TMS.IntegrationTests/TMS.IntegrationTests.csproj --verbosity normal

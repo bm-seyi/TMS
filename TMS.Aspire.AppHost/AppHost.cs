@@ -4,17 +4,14 @@ using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks()
-    .AddCheck<DebeziumHealth>("debezium-healthcheck");
-
-IResourceBuilder<ParameterResource> devServerPassword = builder.AddParameter("DevServerPassword", secret: true);
-
-IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", devServerPassword, 1433)
+IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", builder.AddParameter("DevServerPassword", secret: true), 1433)
     .WithLifetime(ContainerLifetime.Session)
     .WithImage("mssql/server", "2022-latest")
     .WithEnvironment("ACCEPT_EULA", "Y")
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
+
+IResourceBuilder<SqlServerDatabaseResource> tmsDatabase = devServer.AddDatabase("TMS-Database", "TMS");
 
 IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
     .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
@@ -23,12 +20,7 @@ IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", 
     .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
     .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
     .WaitFor(devServer)
-    .WithHealthCheck("debezium-healthcheck")
-    .WithEndpoint("debezium", x =>
-    {
-        x.TargetPort = 8083;
-        x.Port = 8083;
-    });
+    .WithHttpEndpoint(port: 8083, targetPort: 8083);
 
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
     .WithEnvironment("KAFKA_NODE_ID", "1")
@@ -41,15 +33,10 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     .WithEnvironment("KAFKA_INTER_BROKER_LISTENER_NAME", "PLAINTEXT")
     .WithEnvironment("CLUSTER_ID", "bmcwR01GorP3gKszzXQFQA")
     .WithEnvironment("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1")
-    .WithEndpoint("kafka", x =>
-    {
-        x.TargetPort = 29092;
-        x.Port = 29092;
-    });
+    .WithHttpEndpoint(port: 29092, targetPort: 29092);
 
-IResourceBuilder<ParameterResource> redisPassword = builder.AddParameter("redisPassword", secret: true);
 
-IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379,  redisPassword)
+IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379, builder.AddParameter("redisPassword", secret: true))
     .WithRedisInsight()
     .WithLifetime(ContainerLifetime.Session);
 
@@ -61,6 +48,10 @@ builder.AddProject<TMS_WorkerService>("WorkerService")
     .WaitFor(signalR)
     .WaitFor(debezium)
     .WaitFor(kafka);
+
+builder.AddProject<TMS_API>("TMS-API")
+    .WithReference(tmsDatabase, "DefaultConnection")
+    .WaitFor(devServer);
 
 DistributedApplication distributedApplication = builder.Build();
 
