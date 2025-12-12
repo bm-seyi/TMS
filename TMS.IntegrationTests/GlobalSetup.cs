@@ -16,23 +16,22 @@ namespace TMS.IntegrationTests
         public static async Task AssemblyInit(TestContext context)
         {
             Configuration = new ConfigurationBuilder()
-            .AddUserSecrets<GlobalTestSetup>()
             .AddEnvironmentVariables()
             .Build();
  
             IDistributedApplicationTestingBuilder builder = await DistributedApplicationTestingBuilder
                 .CreateAsync<TMS_Aspire_AppHost>();
  
-            App = await builder.BuildAsync();
-            await App.StartAsync();
+            App = await builder.BuildAsync(context.CancellationToken);
+            await App.StartAsync(context.CancellationToken);
         }
  
         [AssemblyCleanup]
-        public static async Task AssemblyCleanup()
+        public static async Task AssemblyCleanup(TestContext context)
         {
             if (App != null)
             {
-                await App.StopAsync();
+                await App.StopAsync(context.CancellationToken);
                 await App.DisposeAsync();
             }
         }
