@@ -2,7 +2,8 @@ using System.Diagnostics;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
- 
+using TMS.Core.Extensions;
+
 namespace TMS.API.ExceptionHandlers
 {
     public sealed class ExceptionHandler : IExceptionHandler
@@ -32,7 +33,7 @@ namespace TMS.API.ExceptionHandlers
             httpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
             await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
            
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Sanitize());
  
             return true;
         }
