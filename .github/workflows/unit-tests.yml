@@ -30,4 +30,4 @@ jobs:
               run: dotnet build --no-restore
 
             - name: Run Tests
-              run: dotnet test ./TMS.UnitTests/TMS.UnitTests.csproj --verbosity normal
+              run: dotnet test --project ./TMS.UnitTests/TMS.UnitTests.csproj --verbosity normal

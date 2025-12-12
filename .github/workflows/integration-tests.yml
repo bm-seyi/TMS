@@ -35,4 +35,4 @@ jobs:
               run: dotnet build --no-restore
 
             - name: Run Tests
-              run: dotnet test ./TMS.IntegrationTests/TMS.IntegrationTests.csproj --verbosity normal
+              run: dotnet test --project ./TMS.IntegrationTests/TMS.IntegrationTests.csproj --verbosity normal
