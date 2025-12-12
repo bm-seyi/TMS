@@ -14,7 +14,7 @@ namespace TMS.IntegrationTests.API.Endpoints
         {
             // Arrange
             HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
-            httpClient.Timeout = TimeSpan.FromMinutes(3);
+            await app.ResourceNotifications.WaitForResourceHealthyAsync("TMS-API", TestContext.CancellationToken);
  
             // Act
             HttpResponseMessage httpResponseMessage = await httpClient.GetAsync("/health", TestContext.CancellationToken);
@@ -28,7 +28,7 @@ namespace TMS.IntegrationTests.API.Endpoints
         {
             // Arrange
             HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
-            httpClient.Timeout = TimeSpan.FromMinutes(3);
+            await app.ResourceNotifications.WaitForResourceHealthyAsync("TMS-API", TestContext.CancellationToken);
 
             HttpResponseMessage response = await httpClient.GetAsync("/health", TestContext.CancellationToken);
             response.EnsureSuccessStatusCode();
@@ -48,8 +48,8 @@ namespace TMS.IntegrationTests.API.Endpoints
         {
             // Arrange
             HttpClient httpClient = app.CreateHttpClient("TMS-API", "https");
-            httpClient.Timeout = TimeSpan.FromMinutes(3);
-            
+            await app.ResourceNotifications.WaitForResourceHealthyAsync("TMS-API", TestContext.CancellationToken);
+
             HttpResponseMessage response = await httpClient.GetAsync("/health", TestContext.CancellationToken);
             response.EnsureSuccessStatusCode();
  
