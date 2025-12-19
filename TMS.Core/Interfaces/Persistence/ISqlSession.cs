@@ -7,6 +7,7 @@ namespace TMS.Core.Interfaces.Persistence
     {
         SqlConnection Connection { get; }
         DbTransaction? Transaction { get;}
+        Task OpenAsync(CancellationToken cancellationToken = default);
         Task BeginAsync(CancellationToken cancellationToken = default);
         Task CommitAsync(CancellationToken cancellationToken = default);
         Task RollbackAsync(CancellationToken cancellationToken = default);
