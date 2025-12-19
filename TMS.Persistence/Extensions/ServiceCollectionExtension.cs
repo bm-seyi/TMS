@@ -9,7 +9,8 @@ namespace TMS.Persistence.Extensions
     {
         extension (IServiceCollection services)
         {
-            public IServiceCollection AddUnitOfWork() => services.AddScoped<IUnitofWork, UnitofWork>();
+            public IServiceCollection AddSqlSession() => services.AddScoped<ISqlSession, SqlSession>();
+            public IServiceCollection AddHealthCheckProcedures() => services.AddScoped<IHealthCheckProcedures, HealthCheckProcedures>();
             public IServiceCollection AddSqlConnectionFactory() => services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         }
     }

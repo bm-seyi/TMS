@@ -25,7 +25,6 @@ builder.Services.AddSignalR()
     });
 
 builder.Services.AddSqlConnectionFactory();
-builder.Services.AddUnitOfWork();
 
 WebApplication app = builder.Build();
 

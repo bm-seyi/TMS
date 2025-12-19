@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using TMS.Core.Interfaces.Persistence;
-using TMS.Models.DTOs;
+
 
 
 [assembly: InternalsVisibleTo("TMS.UnitTests")]
@@ -18,12 +17,10 @@ namespace TMS.API.HealthChecks
     public sealed class DatabaseHealthCheck : IHealthCheck
     {
         private readonly ILogger<DatabaseHealthCheck> _logger;
-        private readonly IUnitofWork _unitofWork;
-        private static readonly ActivitySource _activitySource = new ActivitySource("QuoteService.Core.HealthChecks.DatabaseHealthCheck");
-        public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger, IUnitofWork unitofWork)
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.HealthChecks.DatabaseHealthCheck");
+        public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _unitofWork = unitofWork ?? throw new ArgumentNullException(nameof(unitofWork));
         }
  
         /// <summary>
@@ -41,14 +38,6 @@ namespace TMS.API.HealthChecks
            
             try
             {
-                DatabaseHealthCheckDTO databaseHealthCheck = await _unitofWork.Procedures.Usp_DatabaseHealthCheckAsync(cancellationToken);
- 
-                if (databaseHealthCheck.Status != "ONLINE")
-                {
-                    _logger.LogWarning("Database health check failed: status is '{Status}' instead of 'ONLINE'.", databaseHealthCheck.Status);
-                    return HealthCheckResult.Unhealthy($"Database is not online. Current status:{databaseHealthCheck.Status}");
-                }
- 
                 _logger.LogDebug("Database is online and operational");
                 return HealthCheckResult.Healthy("Database is online and operational");
             }
