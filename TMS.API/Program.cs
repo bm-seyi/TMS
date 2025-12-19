@@ -44,7 +44,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 
-builder.Services.AddUnitOfWork();
 builder.Services.AddSqlConnectionFactory();
 
 
