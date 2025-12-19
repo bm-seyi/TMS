@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using MediatR;
 using TMS.Core.Interfaces.Persistence;
+using TMS.Core.Interfaces;
 
 
 namespace TMS.Core.Behaviours
@@ -21,7 +22,7 @@ namespace TMS.Core.Behaviours
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
 
-            if (request is IReadOnlyProcedures)
+            if (request is IReadOnlyRequest)
             {
                 _logger.LogDebug("Request of type {RequestType} does not require a transaction.", typeof(TRequest).Name);
                 return await next(cancellationToken);

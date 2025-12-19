@@ -143,6 +143,9 @@ public static class Extensions
 
         foreach (var type in assemblies.SelectMany(x => x.GetTypes()))
         {
+            if (type.ContainsGenericParameters)
+                continue;
+                
             foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
             {
                 if (field.FieldType == typeof(ActivitySource))

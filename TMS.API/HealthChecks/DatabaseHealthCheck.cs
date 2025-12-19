@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using MediatR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-
+using TMS.Core.Queries;
+using TMS.Models.DTOs;
 
 
 [assembly: InternalsVisibleTo("TMS.UnitTests")]
@@ -17,10 +19,12 @@ namespace TMS.API.HealthChecks
     public sealed class DatabaseHealthCheck : IHealthCheck
     {
         private readonly ILogger<DatabaseHealthCheck> _logger;
+        private readonly IMediator _mediator;
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.HealthChecks.DatabaseHealthCheck");
-        public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger)
+        public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
  
         /// <summary>
@@ -38,6 +42,12 @@ namespace TMS.API.HealthChecks
            
             try
             {
+                DatabaseHealthCheckDTO databaseHealthCheckDTO = await _mediator.Send(new DatabaseHealthCheckQuery(), cancellationToken);
+                if (databaseHealthCheckDTO.Status != "ONLINE")
+                {
+                    _logger.LogWarning("Database health check failed: status is '{Status}' instead of 'ONLINE'.", databaseHealthCheckDTO.Status);
+                    return HealthCheckResult.Unhealthy($"Database is not online. Current status:{databaseHealthCheckDTO.Status}");
+                }
                 _logger.LogDebug("Database is online and operational");
                 return HealthCheckResult.Healthy("Database is online and operational");
             }
