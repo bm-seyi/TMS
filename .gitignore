@@ -9,9 +9,8 @@ obj/
 
 # Other Exclustions
 .env
-TMS_API.http
-tempkey.jwk
-node_modules/
+.vs/
+.vscode/
 Aspire/resources/kafka/sqlserver-connector.json
 
 k8s/helm/environments/dev/*.yaml
