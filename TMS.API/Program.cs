@@ -1,4 +1,6 @@
+using System.Net.Mime;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TMS.API.ExceptionHandlers;
 using TMS.API.HealthChecks;
@@ -72,7 +74,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
  
     ResponseWriter = async (context, report) =>
     {
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = MediaTypeNames.Application.Json;
         await context.Response.WriteAsJsonAsync(report);
     }
 });
