@@ -7,7 +7,7 @@ using TMS.Core.Interfaces;
 
 namespace TMS.Core.Behaviours
 {
-    internal sealed class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+    internal sealed class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull, IRequiresTransaction
     {
         private readonly ILogger<TransactionBehaviour<TRequest, TResponse>> _logger;
         private readonly ISqlSession _sqlSession;
@@ -21,13 +21,6 @@ namespace TMS.Core.Behaviours
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-
-            if (request is IReadOnlyRequest)
-            {
-                _logger.LogDebug("Request of type {RequestType} does not require a transaction.", typeof(TRequest).Name);
-                return await next(cancellationToken);
-            }
-
             using Activity? activity = _activitySource.StartActivity("TransactionBehaviour.Handle");
 
             await _sqlSession.BeginAsync(cancellationToken);
