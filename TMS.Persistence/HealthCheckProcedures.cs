@@ -7,7 +7,7 @@ using TMS.Models.DTOs;
 
 namespace TMS.Persistence
 {
-    internal sealed class HealthCheckProcedures : IHealthCheckProcedures, IReadOnlyProcedures
+    internal sealed class HealthCheckProcedures : IHealthCheckProcedures
     {
         private readonly ILogger<HealthCheckProcedures> _logger;
         private readonly ISqlSession _sqlSession;

@@ -5,6 +5,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TMS.API.ExceptionHandlers;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
+using TMS.Core.Extensions;
+using TMS.Core.Queries;
 using TMS.Persistence.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -45,7 +47,13 @@ builder.Services.AddHealthChecks()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
+// MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<DatabaseHealthCheckQuery>());
+builder.Services.AddConnectionBehaviour();
+builder.Services.AddTransactionBehaviour();
 
+builder.Services.AddSqlSession();
+builder.Services.AddHealthCheckProcedures();
 builder.Services.AddSqlConnectionFactory();
 
 
