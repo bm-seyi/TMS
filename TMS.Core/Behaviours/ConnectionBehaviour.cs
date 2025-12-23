@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using TMS.Core.Interfaces;
 using TMS.Core.Interfaces.Persistence;
 
 namespace TMS.Core.Behaviours
 {
-    internal sealed class ConnectionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+    internal sealed class ConnectionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull, IRequiresConnection
     {
         private readonly ILogger<ConnectionBehaviour<TRequest, TResponse>> _logger;
         private readonly ISqlSession _sqlSession;

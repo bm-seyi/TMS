@@ -4,5 +4,5 @@ using TMS.Models.DTOs;
 
 namespace TMS.Core.Queries
 {
-    public sealed record DatabaseHealthCheckQuery : IRequest<DatabaseHealthCheckDTO>, IReadOnlyRequest;
+    public sealed record DatabaseHealthCheckQuery : IRequest<DatabaseHealthCheckDTO>, IRequiresConnection;
 }
