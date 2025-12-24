@@ -6,7 +6,7 @@ using TMS.Core.Interfaces.Services;
 using TMS.Core.Interfaces.Factories;
 
 
-namespace WorkerService.BackgroundServices
+namespace TMS.WorkerService.BackgroundServices
 {
     public sealed class LinesWorker : BackgroundService
     {
@@ -14,7 +14,7 @@ namespace WorkerService.BackgroundServices
         private readonly HubConnection _hubConnection;
         private readonly IKafkaService _kafkaService;
         private readonly IConfiguration _configuration;
-        private static readonly ActivitySource _activitySource = new ActivitySource("WorkerService.BackgroundServices.LinesWorker");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.WorkerService.BackgroundServices.LinesWorker");
 
         public LinesWorker(ILogger<LinesWorker> logger, IHubConnectionFactory hubConnectionFactory, IKafkaService kafkaService, IConfiguration configuration)
         {
@@ -27,9 +27,9 @@ namespace WorkerService.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using Activity? activity = _activitySource.StartActivity("ExecuteAsync");
+            using Activity? activity = _activitySource.StartActivity("LinesWorker.ExecuteAsync");
 
-            await _hubConnection.StartAsync();
+            await _hubConnection.StartAsync(stoppingToken);
 
             string bootstrapServers = _configuration.GetValue<string>("Kafka:BootstrapServers") ?? throw new InvalidOperationException("Kafka BootstrapServers configuration is missing.");
             await _kafkaService.CreateTopicAsync("sqlserver.TMS.dbo.Lines", bootstrapServers);
