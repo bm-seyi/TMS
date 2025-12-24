@@ -75,7 +75,20 @@ public static class Extensions
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()
                     .AddRedisInstrumentation()
-                    .AddActivitySources();
+                    .AddSource("TMS.API.ExceptionHandlers.ExceptionHandler")
+                    .AddSource("TMS.API.ExceptionHandlers.OperationCanceledHandler")
+                    .AddSource("TMS.API.HealthChecks.DatabaseHealthCheck")
+                    .AddSource("TMS.API.Middleware.TraceMiddleware")
+                    .AddSource("TMS.Core.Behaviours.ConnectionBehaviour")
+                    .AddSource("TMS.Core.Behaviours.TransactionBehaviour")
+                    .AddSource("TMS.Core")
+                    .AddSource("TMS.Core.Handlers.DatabaseHealthCheckHandler")
+                    .AddSource("TMS.Core.Services.KafkaService")
+                    .AddSource("TMS.Persistence.Factories.SqlConnectionFactory")
+                    .AddSource("TMS.Persistence.HealthCheckProcedures")
+                    .AddSource("TMS.Persistence.SqlSession")
+                    .AddSource("TMS.SignalR.Hubs.LinesHub")
+                    .AddSource("TMS.WorkerService.BackgroundServices.LinesWorker");
             });
 
         builder.AddOpenTelemetryExporters();
@@ -128,36 +141,5 @@ public static class Extensions
         }
 
         return app;
-    }
-
-    public static TracerProviderBuilder AddActivitySources(this TracerProviderBuilder builder)
-    {
-        Assembly? assembly = Assembly.GetEntryAssembly();
-
-        if (assembly == null)
-            return builder;
-
-        string assemblyNamePrefix = assembly.FullName?.Split('.')[0] ?? throw new InvalidOperationException($"Failed to retrieve assembly name: {assembly?.GetName().Name ?? "<unknown>"} (FullName was null or empty).");
-
-        IList<Assembly> assemblies = [.. assembly.GetReferencedAssemblies().Where(x => x.Name != null && x.Name.StartsWith(assemblyNamePrefix)).Select(Assembly.Load).Prepend(assembly)];
-
-        foreach (var type in assemblies.SelectMany(x => x.GetTypes()))
-        {
-            if (type.ContainsGenericParameters)
-                continue;
-                
-            foreach (var field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
-            {
-                if (field.FieldType == typeof(ActivitySource))
-                {
-                    ActivitySource? value = field.GetValue(null) as ActivitySource;
-
-                    if (value != null)
-                        builder.AddSource(value.Name);
-                }
-            }
-        }
-        
-        return builder;
     }
 }

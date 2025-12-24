@@ -21,7 +21,7 @@ namespace TMS.Persistence
 
         public async Task<DatabaseHealthCheckDTO> DatabaseHealthCheckAsync(CancellationToken cancellationToken = default)
         {
-            using Activity? activity = _activitySource.StartActivity("Procedures.DatabaseHealthCheckAsync");
+            using Activity? activity = _activitySource.StartActivity("HealthCheckProcedures.DatabaseHealthCheckAsync");
 
             _logger.LogDebug("Executing database health check procedure.");
 

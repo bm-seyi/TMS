@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using TMS.Core.Interfaces.Factories;
 using System.Runtime.CompilerServices;
+using TMS.Core.Extensions;
 
 
 [assembly: InternalsVisibleTo("TMS.UnitTests")]
@@ -17,7 +18,7 @@ namespace TMS.Persistence.Factories
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<SqlConnectionFactory> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Factories.SqlConnectionFactory");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Persistence.Factories.SqlConnectionFactory");
 
         public SqlConnectionFactory(IConfiguration configuration, ILogger<SqlConnectionFactory> logger)
         {
@@ -33,9 +34,9 @@ namespace TMS.Persistence.Factories
         /// <exception cref="InvalidOperationException"></exception>
         public SqlConnection CreateConnection(string connectionName)
         {
-            using Activity? activity = _activitySource.StartActivity("CreateConnection");
+            using Activity? activity = _activitySource.StartActivity("SqlConnectionFactory.CreateConnection");
             
-            string connectionString = _configuration[$"ConnectionStrings:{connectionName}"] ?? throw new InvalidOperationException($"Unable to retrieve {connectionName} connection string from configuration.");
+            string connectionString = _configuration.GetRequiredValue<string>($"ConnectionStrings:{connectionName}");
             _logger.LogInformation("Connection String: {0} was successfully retrieved from the configuration", connectionName);
 
             return new SqlConnection(connectionString);

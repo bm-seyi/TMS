@@ -19,7 +19,7 @@ namespace TMS.Core.Services
 
         public async Task CreateTopicAsync(string topicName, string bootstrapServers)
         {
-            using Activity? activity = _activitySource.StartActivity("CreateTopicAsync");
+            using Activity? activity = _activitySource.StartActivity("KafkaService.CreateTopicAsync");
 
             _logger.LogInformation("Creating Kafka topic: {TopicName}", topicName);
 
@@ -66,7 +66,7 @@ namespace TMS.Core.Services
 
         public IConsumer<Ignore, string> CreateConsumer(string bootstrapServers, string groupId)
         {
-            using Activity? activity = _activitySource.StartActivity("CreateConsumer");
+            using Activity? activity = _activitySource.StartActivity("KafkaService.CreateConsumer");
             
             ConsumerConfig consumerConfig = new ConsumerConfig
             {

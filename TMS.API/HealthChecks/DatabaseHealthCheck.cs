@@ -20,7 +20,7 @@ namespace TMS.API.HealthChecks
     {
         private readonly ILogger<DatabaseHealthCheck> _logger;
         private readonly IMediator _mediator;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.HealthChecks.DatabaseHealthCheck");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API.HealthChecks.DatabaseHealthCheck");
         public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

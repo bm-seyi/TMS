@@ -1,6 +1,6 @@
-using SignalR.Hubs;
 using StackExchange.Redis;
 using TMS.Persistence.Extensions;
+using TMS.SignalR.Hubs;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
