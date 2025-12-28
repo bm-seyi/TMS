@@ -1,6 +1,6 @@
 using TMS.Models.DTOs;
 
-namespace TMS.Core.Interfaces.Persistence
+namespace TMS.Core.Interfaces.Persistence.Procedures
 {
     public interface IHealthCheckProcedures
     {
