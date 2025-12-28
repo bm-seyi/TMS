@@ -20,7 +20,7 @@ namespace TMS.WorkerService.BackgroundServices
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ = hubConnectionFactory ?? throw new ArgumentNullException(nameof(hubConnectionFactory));
-            _hubConnection = hubConnectionFactory.CreateConnection("linesHub");
+            _hubConnection = hubConnectionFactory.CreateConnection("linesDataHub");
             _kafkaService = kafkaService ?? throw new ArgumentNullException(nameof(kafkaService));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }

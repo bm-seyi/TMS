@@ -1,0 +1,8 @@
+using MediatR;
+using TMS.Core.Interfaces;
+using TMS.Models.DTOs;
+
+namespace TMS.Core.Queries
+{
+    public sealed record LinesDataQuery : IRequest<IEnumerable<LinesReadDTO>>, IRequiresConnection;
+}

@@ -3,9 +3,10 @@ using System.Diagnostics;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using TMS.Core.Interfaces.Persistence;
+using TMS.Core.Interfaces.Persistence.Procedures;
 using TMS.Models.DTOs;
 
-namespace TMS.Persistence
+namespace TMS.Persistence.Procedures
 {
     internal sealed class HealthCheckProcedures : IHealthCheckProcedures
     {

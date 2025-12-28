@@ -48,13 +48,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 // MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<DatabaseHealthCheckQuery>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DatabaseHealthCheckQuery).Assembly));
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
+
 
 builder.Services.AddSqlSession();
 builder.Services.AddHealthCheckProcedures();
 builder.Services.AddSqlConnectionFactory();
+builder.Services.AddLinesProcedures();
 
 
 WebApplication app = builder.Build();

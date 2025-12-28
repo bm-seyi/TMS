@@ -1,4 +1,6 @@
 using StackExchange.Redis;
+using TMS.Core.Extensions;
+using TMS.Core.Queries;
 using TMS.Persistence.Extensions;
 using TMS.SignalR.Hubs;
 
@@ -12,8 +14,8 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
-string redisPassword = builder.Configuration.GetValue<string>("Parameters:RedisPassword") ?? throw new InvalidOperationException("Redis Password is not configured.");
-string redisEndpoint = builder.Configuration.GetValue<string>("Redis:Endpoint") ?? throw new InvalidOperationException("Redis endpoint is not configured.");
+string redisPassword = builder.Configuration.GetRequiredValue<string>("Parameters:RedisPassword");
+string redisEndpoint = builder.Configuration.GetRequiredValue<string>("Redis:Endpoint");
 
 builder.Services.AddSignalR()
     .AddStackExchangeRedis(options =>
@@ -24,10 +26,17 @@ builder.Services.AddSignalR()
         options.Configuration.ChannelPrefix = RedisChannel.Literal("TMS");
     });
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(LinesDataQuery).Assembly));
+builder.Services.AddConnectionBehaviour();
+builder.Services.AddTransactionBehaviour();
+
 builder.Services.AddSqlConnectionFactory();
+builder.Services.AddSqlSession();
+builder.Services.AddHealthCheckProcedures();
+builder.Services.AddLinesProcedures();
 
 WebApplication app = builder.Build();
 
-app.MapHub<LinesHub>("/linesHub");
+app.MapHub<LinesDataHub>("/linesDataHub");
 
 await app.RunAsync();
