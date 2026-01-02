@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Confluent.Kafka;
 using TMS.Core.Interfaces.Services;
 using TMS.Core.Interfaces.Factories;
+using TMS.Core.Extensions;
 
 
 namespace TMS.WorkerService.BackgroundServices
@@ -31,11 +32,12 @@ namespace TMS.WorkerService.BackgroundServices
 
             await _hubConnection.StartAsync(stoppingToken);
 
-            string bootstrapServers = _configuration.GetValue<string>("Kafka:BootstrapServers") ?? throw new InvalidOperationException("Kafka BootstrapServers configuration is missing.");
+            string bootstrapServers = _configuration.GetRequiredValue<string>("Kafka:BootstrapServers");
             await _kafkaService.CreateTopicAsync("sqlserver.TMS.dbo.Lines", bootstrapServers);
 
             using IConsumer<Ignore, string> consumer = _kafkaService.CreateConsumer(bootstrapServers, "lines-consumer-group");
             consumer.Subscribe("sqlserver.TMS.dbo.Lines");
+            
             _logger.LogInformation("LinesWorker subscribed to topic 'sqlserver.TMS.dbo.Lines'");
 
             while (!stoppingToken.IsCancellationRequested)
