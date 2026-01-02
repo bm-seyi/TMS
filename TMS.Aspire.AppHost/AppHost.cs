@@ -41,7 +41,7 @@ IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379
     .WithLifetime(ContainerLifetime.Session);
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
-    .WaitFor(devServer)
+    .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection")
     .WaitFor(redis);
 
@@ -51,8 +51,9 @@ builder.AddProject<TMS_WorkerService>("WorkerService")
     .WaitFor(kafka);
 
 builder.AddProject<TMS_API>("TMS-API")
-    .WithReference(tmsDatabase, "DefaultConnection")
-    .WaitFor(devServer);
+    .WaitFor(tmsDatabase)
+    .WithReference(tmsDatabase, "DefaultConnection");
+
 
 DistributedApplication distributedApplication = builder.Build();
 
