@@ -1,6 +1,7 @@
 using Aspire;
 using Microsoft.Extensions.DependencyInjection;
 using Projects;
+using TMS.Aspire.AppHost;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
@@ -14,15 +15,21 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
 IResourceBuilder<SqlServerDatabaseResource> tmsDatabase = devServer.AddDatabase("TMS-Database", "TMS");
 
 IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+    .WithLifetime(ContainerLifetime.Session)
     .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
     .WithEnvironment("GROUP_ID", "1")
     .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
     .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
     .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
     .WaitFor(devServer)
+    .OnResourceReady(async (resource, evt, cancellationToken) =>
+    {
+        await DebeziumService.AddAsync(cancellationToken);
+    })
     .WithHttpEndpoint(port: 8083, targetPort: 8083);
 
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
+    .WithLifetime(ContainerLifetime.Session)
     .WithEnvironment("KAFKA_NODE_ID", "1")
     .WithEnvironment("KAFKA_PROCESS_ROLES", "broker,controller")
     .WithEnvironment("KAFKA_LISTENERS", "PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092")
@@ -37,8 +44,9 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
 
 
 IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379, builder.AddParameter("redisPassword", secret: true))
-    .WithRedisInsight()
-    .WithLifetime(ContainerLifetime.Session);
+    .WithImageTag("8.2.3")
+    .WithLifetime(ContainerLifetime.Session)
+    .WithRedisInsight();
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)
