@@ -21,6 +21,7 @@ builder.Services.AddSignalR()
     .AddStackExchangeRedis(options =>
     {
         options.Configuration.AbortOnConnectFail = false;
+        options.Configuration.Ssl = true;
         options.Configuration.Password = redisPassword;
         options.Configuration.EndPoints.Add(redisEndpoint);
         options.Configuration.ChannelPrefix = RedisChannel.Literal("TMS");
