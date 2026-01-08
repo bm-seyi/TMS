@@ -22,10 +22,6 @@ IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", 
     .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
     .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
     .WaitFor(devServer)
-    .OnResourceReady(async (resource, evt, cancellationToken) =>
-    {
-        await DebeziumService.AddAsync(cancellationToken);
-    })
     .WithHttpEndpoint(port: 8083, targetPort: 8083);
 
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
@@ -42,11 +38,18 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     .WithEnvironment("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1")
     .WithHttpEndpoint(port: 29092, targetPort: 29092);
 
-
 IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379, builder.AddParameter("redisPassword", secret: true))
     .WithImageTag("8.2.3")
     .WithLifetime(ContainerLifetime.Session)
     .WithRedisInsight();
+
+IResourceBuilder<ContainerResource> vault = builder.AddContainer("vault", "hashicorp/vault", "latest")
+    .WithLifetime(ContainerLifetime.Session)
+    .WithEnvironment("VAULT_DEV_ROOT_TOKEN_ID", "root")
+    .WithEnvironment("VAULT_DEV_LISTEN_ADDRESS", "0.0.0.0:8200")
+    .WithArgs("server", "-dev")
+    .WithHttpEndpoint(port: 8200, targetPort: 8200)
+   ;
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)

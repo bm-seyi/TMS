@@ -6,6 +6,7 @@ using TMS.API.ExceptionHandlers;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
 using TMS.Core.Extensions;
+using TMS.Core.Mapping;
 using TMS.Core.Queries;
 using TMS.Persistence.Extensions;
 
@@ -52,12 +53,16 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Dat
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
 
+// AutoMapper
+builder.Services.AddAutoMapper(crg => {}, typeof(AutoMapperProfile));
 
+// Other Services
 builder.Services.AddSqlSession();
 builder.Services.AddHealthCheckProcedures();
 builder.Services.AddSqlConnectionFactory();
 builder.Services.AddLinesProcedures();
-
+builder.Services.AddSecretService();
+builder.Services.AddVaultClient(builder.Configuration);
 
 WebApplication app = builder.Build();
 
