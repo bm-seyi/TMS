@@ -23,17 +23,26 @@ namespace TMS.Core.Behaviours
         {
             using Activity? activity = _activitySource.StartActivity("TransactionBehaviour.Handle");
 
+            string requestName = typeof(TRequest).Name;
+            _logger.LogInformation("Starting transaction for {RequestType}", requestName);
+
+
             await _sqlSession.BeginAsync(cancellationToken);
 
             try
             {
                 TResponse response = await next(cancellationToken);
                 await _sqlSession.CommitAsync(cancellationToken);
+
+                _logger.LogInformation("Transaction committed for {RequestType}", requestName);
+
                 return response;
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError(ex, "Transaction failed for {RequestType}. Rolling back...", requestName);
                 await _sqlSession.RollbackAsync(cancellationToken);
+                _logger.LogInformation("Transaction rolled back for {RequestType}", requestName);
                 throw;
             }
         }

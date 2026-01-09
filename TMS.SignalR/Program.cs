@@ -1,5 +1,6 @@
 using StackExchange.Redis;
 using TMS.Core.Extensions;
+using TMS.Core.Mapping;
 using TMS.Core.Queries;
 using TMS.Persistence.Extensions;
 using TMS.SignalR.Hubs;
@@ -27,14 +28,21 @@ builder.Services.AddSignalR()
         options.Configuration.ChannelPrefix = RedisChannel.Literal("TMS");
     });
 
+// MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(LinesDataQuery).Assembly));
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
 
+// AutoMapper
+builder.Services.AddAutoMapper(crg => {}, typeof(AutoMapperProfile));
+
+// Other Services
 builder.Services.AddSqlConnectionFactory();
 builder.Services.AddSqlSession();
 builder.Services.AddHealthCheckProcedures();
 builder.Services.AddLinesProcedures();
+builder.Services.AddSecretService();
+builder.Services.AddVaultClient(builder.Configuration);
 
 WebApplication app = builder.Build();
 
