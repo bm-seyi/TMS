@@ -1,7 +1,8 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Identity.Web;
 using TMS.API.ExceptionHandlers;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
@@ -20,9 +21,17 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
+// Exception Handler
 builder.Services.AddExceptionHandler<OperationCanceledHandler>();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+// Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration);
+
+// Authorization
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 

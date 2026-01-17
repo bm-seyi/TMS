@@ -1,9 +1,16 @@
 using Aspire;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Projects;
 using TMS.Aspire.AppHost;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddUserSecrets<Program>()
+    .AddEnvironmentVariables();
 
 IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", builder.AddParameter("DevServerPassword", secret: true), 1433)
     .WithLifetime(ContainerLifetime.Session)
