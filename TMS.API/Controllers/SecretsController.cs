@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TMS.Core.Queries;
 using TMS.Models.Secrets;
@@ -6,6 +7,7 @@ using TMS.Models.Secrets;
 namespace TMS.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/v1/secrets")]
     public sealed class SecretsController : ControllerBase
     {
