@@ -1,8 +1,10 @@
+using System.Net.Http.Json;
 using Aspire;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Projects;
 using TMS.Aspire.AppHost;
+using TMS.Aspire.AppHost.Services;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
@@ -56,7 +58,11 @@ IResourceBuilder<ContainerResource> vault = builder.AddContainer("vault", "hashi
     .WithEnvironment("VAULT_DEV_LISTEN_ADDRESS", "0.0.0.0:8200")
     .WithArgs("server", "-dev")
     .WithHttpEndpoint(port: 8200, targetPort: 8200)
-   ;
+    .OnResourceReady(async (resource, evt, ct) =>
+    {
+        string password = builder.Configuration.GetValue<string>("Parameters:ArcGisVaultPassword") ?? throw new InvalidOperationException("ArcGisVaultPassword is not configured.");
+        await VaultService.WriteArcGisPasswordAsync(resource, password, ct);
+    });
 
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)
@@ -71,7 +77,6 @@ builder.AddProject<TMS_WorkerService>("WorkerService")
 builder.AddProject<TMS_API>("TMS-API")
     .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection");
-
 
 DistributedApplication distributedApplication = builder.Build();
 
