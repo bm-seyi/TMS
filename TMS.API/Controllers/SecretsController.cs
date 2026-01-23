@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using TMS.Core.Queries;
 using TMS.Models.Secrets;
 
@@ -9,6 +10,7 @@ namespace TMS.API.Controllers
 {
     [ApiController]
     [Authorize]
+    [RequireHttps]
     [Route("api/v1/secrets")]
     public sealed class SecretsController : ControllerBase
     {
@@ -22,6 +24,7 @@ namespace TMS.API.Controllers
         }
 
         [HttpGet("arcgis")]
+        [RequiredScope("Arcgis.Read")]
         [ProducesResponseType<ArcgisSecret>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status499ClientClosedRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
