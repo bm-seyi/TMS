@@ -49,7 +49,7 @@ internal static class VaultService
         {
             data = new
             {
-                Password = password
+                ApiKey = password
             }
         };
 
