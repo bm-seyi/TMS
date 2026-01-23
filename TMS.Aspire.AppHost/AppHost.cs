@@ -1,10 +1,9 @@
-using System.Net.Http.Json;
 using Aspire;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Projects;
-using TMS.Aspire.AppHost;
 using TMS.Aspire.AppHost.Services;
+
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
