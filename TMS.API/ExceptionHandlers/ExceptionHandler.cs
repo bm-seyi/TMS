@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
 using TMS.Core.Extensions;
@@ -36,7 +35,7 @@ namespace TMS.API.ExceptionHandlers
            
             await _problemDetailsWriter.WriteAsync(problemDetailsContext);
            
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Sanitize());
  
             return true;
         }

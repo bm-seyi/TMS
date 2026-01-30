@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TMS.Core.Extensions;
 using TMS.Core.Interfaces.Factories;
 
 
@@ -36,7 +37,7 @@ namespace TMS.API.ExceptionHandlers
  
                 await _problemDetailsWriter.WriteAsync(problemDetailsContext);
  
-                _logger.LogError(exception, "Operation was canceled by the user. Request Path: {RequestPath}, Method: {RequestMethod}, TraceIdentifier: {TraceId}", httpContext.Request.Path, httpContext.Request.Method, httpContext.TraceIdentifier);
+                _logger.LogError(exception, "Operation was canceled by the user. Request Path: {RequestPath}, Method: {RequestMethod}, TraceIdentifier: {TraceId}", httpContext.Request.Path.ToString().Sanitize(), httpContext.Request.Method, httpContext.TraceIdentifier);
  
                 return true;
             }
