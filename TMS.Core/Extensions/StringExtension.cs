@@ -4,7 +4,7 @@ namespace TMS.Core.Extensions
     {
         extension(string text)
         {
-           public string Sanitize() => text.Replace("\r", "").Replace("\n", "");
+           public string Sanitize() => text.Replace("\r", string.Empty).Replace("\n", string.Empty);
         }
     }
 }
