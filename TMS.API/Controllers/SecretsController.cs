@@ -31,7 +31,11 @@ namespace TMS.API.Controllers
         public async Task<IActionResult> GetArcgisSecretAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Received request to get ArcGIS secret.");
+
             ArcgisSecret secret = await _mediator.Send(new GetArcgisSecretQuery(), cancellationToken);
+
+            _logger.LogInformation("Successfully retrieved ArcGIS secret");
+            
             return Ok(secret);
         }
     }

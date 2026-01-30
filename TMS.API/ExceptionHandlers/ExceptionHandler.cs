@@ -3,37 +3,40 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
 using TMS.Core.Extensions;
+using TMS.Core.Interfaces.Factories;
+
 
 namespace TMS.API.ExceptionHandlers
 {
     public sealed class ExceptionHandler : IExceptionHandler
     {
         private readonly ILogger<ExceptionHandler> _logger;
+        private readonly IProblemDetailsWriter _problemDetailsWriter;
+        private readonly IProblemDetailsFactory _problemDetailsFactory;
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API.ExceptionHandlers.ExceptionHandler");
  
-        public ExceptionHandler(ILogger<ExceptionHandler> logger)
+        public ExceptionHandler(ILogger<ExceptionHandler> logger, IProblemDetailsWriter problemDetailsWriter, IProblemDetailsFactory problemDetailsFactory)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _problemDetailsWriter = problemDetailsWriter ?? throw new ArgumentNullException(nameof(problemDetailsWriter));
+            _problemDetailsFactory = problemDetailsFactory ?? throw new ArgumentNullException(nameof(problemDetailsFactory));
         }
- 
+
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             using Activity? activity = _activitySource.StartActivity("ExceptionHandler.TryHandleAsync");
  
-            ProblemDetails problem = new ProblemDetails
+            ProblemDetails problemDetails = _problemDetailsFactory.CreateProblemDetails("An unexpected error occurred.", "Something went wrong while processing your request.", StatusCodes.Status500InternalServerError);
+ 
+            ProblemDetailsContext problemDetailsContext = new ProblemDetailsContext()
             {
-                Title = "An unexpected error occurred.",
-                Detail = "Something went wrong while processing your request.",
-                Status = StatusCodes.Status500InternalServerError,
-                Type = "https://datatracker.ietf.org/doc/html/rfc9110#name-500-internal-server-error"
+                HttpContext = httpContext,
+                ProblemDetails = problemDetails
             };
- 
- 
-            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            httpContext.Response.ContentType = MediaTypeNames.Application.ProblemJson;
-            await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
            
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Sanitize());
+            await _problemDetailsWriter.WriteAsync(problemDetailsContext);
+           
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
  
             return true;
         }
