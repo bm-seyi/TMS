@@ -37,7 +37,7 @@ namespace TMS.API.ExceptionHandlers
  
                 await _problemDetailsWriter.WriteAsync(problemDetailsContext);
  
-                _logger.LogError(exception, "Operation was canceled by the user. Request Path: {RequestPath}, Method: {RequestMethod}, TraceIdentifier: {TraceId}", httpContext.Request.Path.ToString().Sanitize(), httpContext.Request.Method, httpContext.TraceIdentifier);
+                _logger.LogError(exception, "Operation was canceled by the user. Request Path: {RequestPath}, Method: {RequestMethod}, TraceIdentifier: {TraceId}", httpContext.Request.Path.ToString().Sanitize(), httpContext.Request.Method.Sanitize(), httpContext.TraceIdentifier);
  
                 return true;
             }
