@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 using TMS.API.ExceptionHandlers;
+using TMS.API.Factories;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
 using TMS.Core.Extensions;
+using TMS.Core.Interfaces.Factories;
 using TMS.Core.Mapping;
 using TMS.Core.Queries;
 using TMS.Persistence.Extensions;
@@ -66,6 +68,7 @@ builder.Services.AddTransactionBehaviour();
 builder.Services.AddAutoMapper(crg => {}, typeof(AutoMapperProfile));
 
 // Other Services
+builder.Services.AddSingleton<IProblemDetailsFactory, ProblemDetailsFactory>();
 builder.Services.AddSqlSession();
 builder.Services.AddHealthCheckProcedures();
 builder.Services.AddSqlConnectionFactory();
