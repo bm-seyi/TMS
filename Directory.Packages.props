@@ -19,9 +19,9 @@
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
 
         <!-- .NET Aspire-->
-        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.1.0" />
-        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.1.0" />
-        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.1.0" />
+        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.1.1" />
+        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.1.1" />
+        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.1.1" />
 
         <!-- Microsoft Misc-->
         <PackageVersion Include="Microsoft.Identity.Web" Version="4.3.0" />
@@ -37,7 +37,7 @@
         <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.0-beta.1" />
 
         <!-- Testing-->
-        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.1.0" />
+        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.1.1" />
         <PackageVersion Include="MSTest" Version="4.0.2" />
         <PackageVersion Include="coverlet.collector" Version="6.0.4" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
@@ -51,6 +51,6 @@
         <PackageVersion Include="MediatR" Version="14.0.0" />
         <PackageVersion Include="Dapper" Version="2.1.66" />
         <PackageVersion Include="Scalar.AspNetCore" Version="2.12.38" />
-        
+
     </ItemGroup>
 </Project>
