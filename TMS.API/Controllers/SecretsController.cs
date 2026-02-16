@@ -26,8 +26,8 @@ namespace TMS.API.Controllers
         [HttpGet("arcgis")]
         [RequiredScope("Arcgis.Read")]
         [ProducesResponseType<ArcgisSecret>(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status499ClientClosedRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status499ClientClosedRequest)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetArcgisSecretAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Received request to get ArcGIS secret.");
