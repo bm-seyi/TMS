@@ -11,7 +11,7 @@ namespace TMS.Core.Factories
     {
         private readonly ILogger<HubConnectionFactory> _logger;
         private readonly IConfiguration _configuration;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Factories.HubConnectionFactory");
 
         public HubConnectionFactory(ILogger<HubConnectionFactory> logger, IConfiguration configuration)
         {
