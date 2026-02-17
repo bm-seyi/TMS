@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using TMS.Persistence.Factories;
+using TMS.Infrastructure.Factories;
+
 
 namespace TMS.UnitTests.Persistence.Factories
 {
