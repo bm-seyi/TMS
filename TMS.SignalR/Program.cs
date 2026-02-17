@@ -2,7 +2,7 @@ using StackExchange.Redis;
 using TMS.Core.Extensions;
 using TMS.Core.Mapping;
 using TMS.Core.Queries;
-using TMS.Persistence.Extensions;
+using TMS.Infrastructure.Extensions;
 using TMS.SignalR.Hubs;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

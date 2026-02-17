@@ -12,7 +12,7 @@ using TMS.Core.Extensions;
 using TMS.Core.Interfaces.Factories;
 using TMS.Core.Mapping;
 using TMS.Core.Queries;
-using TMS.Persistence.Extensions;
+using TMS.Infrastructure.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

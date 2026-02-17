@@ -7,7 +7,7 @@ using TMS.Core.Interfaces.Factories;
 using TMS.Core.Interfaces.Persistence;
 
 
-namespace TMS.Persistence
+namespace TMS.Infrastructure.Persistence
 {
     internal sealed class SqlSession : ISqlSession, IAsyncDisposable
     {
