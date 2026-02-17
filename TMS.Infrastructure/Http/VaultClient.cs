@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using TMS.Core.Interfaces.HttpClients;
 
-namespace TMS.Core.HttpClients
+namespace TMS.Infrastructure.Http
 {
     internal sealed class VaultClient : IVaultClient
     {

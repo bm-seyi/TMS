@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration
@@ -7,6 +9,22 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.AddServiceDefaults();
+
+builder.Services.AddHealthChecks()
+    .AddResourceUtilizationHealthCheck(o =>
+    {
+        o.CpuThresholds = new ResourceUsageThresholds
+        {
+        DegradedUtilizationPercentage = 80,
+        UnhealthyUtilizationPercentage = 90,
+        };
+ 
+        o.MemoryThresholds = new ResourceUsageThresholds
+        {
+        DegradedUtilizationPercentage = 80,
+        UnhealthyUtilizationPercentage = 90
+        };
+    });
 
 builder.Services
     .AddReverseProxy()

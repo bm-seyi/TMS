@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
     <ProjectReference Include="..\TMS.Models\TMS.Models.csproj" />
-    <ProjectReference Include="..\TMS.Persistence\TMS.Persistence.csproj" />
+    <ProjectReference Include="..\TMS.Infrastructure\TMS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

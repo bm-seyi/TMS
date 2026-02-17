@@ -3,10 +3,10 @@
   <Project Path="TMS.Aspire.AppHost/TMS.Aspire.AppHost.csproj" />
   <Project Path="TMS.Aspire.ServiceDefaults/TMS.Aspire.ServiceDefaults.csproj" />
   <Project Path="TMS.Core/TMS.Core.csproj" />
+  <Project Path="TMS.Infrastructure/TMS.Infrastructure.csproj" />
   <Project Path="TMS.IntegrationTests/TMS.IntegrationTests.csproj" />
   <Project Path="TMS.Models/TMS.Models.csproj" />
-  <Project Path="TMS.Persistence/TMS.Persistence.csproj" />
-  <Project Path="TMS.Proxy/TMS.Proxy.csproj" />
+  <Project Path="TMS.Gateway/TMS.Gateway.csproj" />
   <Project Path="TMS.SignalR/TMS.SignalR.csproj" />
   <Project Path="TMS.UnitTests/TMS.UnitTests.csproj" />
   <Project Path="TMS.WorkerService/TMS.WorkerService.csproj" />

@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TMS.Core\TMS.Core.csproj" />
-    <ProjectReference Include="..\TMS.Persistence\TMS.Persistence.csproj" />
+    <ProjectReference Include="..\TMS.Infrastructure\TMS.Infrastructure.csproj" />
     <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
   </ItemGroup>
 

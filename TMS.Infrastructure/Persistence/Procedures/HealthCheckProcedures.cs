@@ -6,7 +6,7 @@ using TMS.Core.Interfaces.Persistence;
 using TMS.Core.Interfaces.Persistence.Procedures;
 using TMS.Models.DTOs;
 
-namespace TMS.Persistence.Procedures
+namespace TMS.Infrastructure.Persistence.Procedures
 {
     internal sealed class HealthCheckProcedures : IHealthCheckProcedures
     {
