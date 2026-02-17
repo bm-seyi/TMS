@@ -1,7 +1,7 @@
 using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
-namespace TMS.Core.Interfaces.Persistence
+namespace TMS.Core.Interfaces.Infrastructure.Persistence
 {
     public interface ISqlSession
     {

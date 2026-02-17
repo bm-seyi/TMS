@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using TMS.Core.Interfaces.Persistence.Procedures;
+using TMS.Core.Interfaces.Infrastructure.Persistence.Procedures;
 using TMS.Core.Queries;
 using TMS.Models.DTOs;
 

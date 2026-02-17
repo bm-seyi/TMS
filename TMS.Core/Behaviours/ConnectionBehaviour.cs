@@ -2,7 +2,8 @@ using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using TMS.Core.Interfaces;
-using TMS.Core.Interfaces.Persistence;
+using TMS.Core.Interfaces.Infrastructure.Persistence;
+
 
 namespace TMS.Core.Behaviours
 {

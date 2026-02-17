@@ -1,4 +1,4 @@
-namespace TMS.Core.Interfaces.HttpClients
+namespace TMS.Core.Interfaces.Infrastructure.Http
 {
     public interface IVaultClient
     {

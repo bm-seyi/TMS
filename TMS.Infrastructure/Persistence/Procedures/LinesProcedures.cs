@@ -2,8 +2,8 @@ using System.Data;
 using System.Diagnostics;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using TMS.Core.Interfaces.Persistence;
-using TMS.Core.Interfaces.Persistence.Procedures;
+using TMS.Core.Interfaces.Infrastructure.Persistence;
+using TMS.Core.Interfaces.Infrastructure.Persistence.Procedures;
 using TMS.Models.DTOs;
 
 namespace TMS.Infrastructure.Persistence.Procedures
