@@ -4,7 +4,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Data;
 using TMS.Core.Interfaces.Factories;
-using TMS.Core.Interfaces.Persistence;
+using TMS.Core.Interfaces.Infrastructure.Persistence;
 
 
 namespace TMS.Infrastructure.Persistence

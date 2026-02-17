@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using TMS.Core.Interfaces.HttpClients;
+using TMS.Core.Interfaces.Infrastructure.Http;
 using TMS.Core.Interfaces.Services;
 using TMS.Models.Secrets;
 
