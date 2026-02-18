@@ -1,5 +1,5 @@
 using AutoMapper;
-using TMS.Models.Secrets;
+using TMS.Domain.Secrets;
 
 namespace TMS.Core.Mapping
 {

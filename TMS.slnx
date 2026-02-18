@@ -5,7 +5,7 @@
   <Project Path="TMS.Core/TMS.Core.csproj" />
   <Project Path="TMS.Infrastructure/TMS.Infrastructure.csproj" />
   <Project Path="TMS.IntegrationTests/TMS.IntegrationTests.csproj" />
-  <Project Path="TMS.Models/TMS.Models.csproj" />
+  <Project Path="TMS.Domain/TMS.Domain.csproj" />
   <Project Path="TMS.Gateway/TMS.Gateway.csproj" />
   <Project Path="TMS.SignalR/TMS.SignalR.csproj" />
   <Project Path="TMS.UnitTests/TMS.UnitTests.csproj" />

@@ -2,7 +2,7 @@ using System.Diagnostics;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using TMS.Core.Queries;
-using TMS.Models.DTOs;
+using TMS.Domain.DTOs;
 
 
 namespace TMS.SignalR.Hubs
