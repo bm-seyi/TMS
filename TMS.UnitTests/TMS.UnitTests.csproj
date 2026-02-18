@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
-    <ProjectReference Include="..\TMS.Core\TMS.Core.csproj" />
+    <ProjectReference Include="..\TMS.Application\TMS.Application.csproj" />
     <ProjectReference Include="..\TMS.Infrastructure\TMS.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Data;
-using TMS.Core.Interfaces.Factories;
-using TMS.Core.Interfaces.Infrastructure.Persistence;
+using TMS.Application.Interfaces.Factories;
+using TMS.Application.Interfaces.Infrastructure.Persistence;
 
 
 namespace TMS.Infrastructure.Persistence

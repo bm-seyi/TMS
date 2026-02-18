@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TMS.Core.Extensions;
-using TMS.Core.Interfaces.Factories;
-using TMS.Core.Interfaces.Infrastructure.Http;
-using TMS.Core.Interfaces.Infrastructure.Persistence;
-using TMS.Core.Interfaces.Infrastructure.Persistence.Procedures;
+using TMS.Application.Extensions;
+using TMS.Application.Interfaces.Factories;
+using TMS.Application.Interfaces.Infrastructure.Http;
+using TMS.Application.Interfaces.Infrastructure.Persistence;
+using TMS.Application.Interfaces.Infrastructure.Persistence.Procedures;
 using TMS.Infrastructure.Factories;
 using TMS.Infrastructure.Http;
 using TMS.Infrastructure.Persistence;

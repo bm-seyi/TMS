@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using TMS.Core.Queries;
+using TMS.Application.Queries;
 using TMS.Domain.DTOs;
 
 

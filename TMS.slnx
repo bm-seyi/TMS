@@ -2,9 +2,9 @@
   <Project Path="TMS.API/TMS.API.csproj" />
   <Project Path="TMS.Aspire.AppHost/TMS.Aspire.AppHost.csproj" />
   <Project Path="TMS.Aspire.ServiceDefaults/TMS.Aspire.ServiceDefaults.csproj" />
-  <Project Path="TMS.Core/TMS.Core.csproj" />
   <Project Path="TMS.Infrastructure/TMS.Infrastructure.csproj" />
   <Project Path="TMS.IntegrationTests/TMS.IntegrationTests.csproj" />
+  <Project Path="TMS.Application/TMS.Application.csproj" />
   <Project Path="TMS.Domain/TMS.Domain.csproj" />
   <Project Path="TMS.Gateway/TMS.Gateway.csproj" />
   <Project Path="TMS.SignalR/TMS.SignalR.csproj" />

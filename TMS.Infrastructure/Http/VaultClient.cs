@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
-using TMS.Core.Interfaces.Infrastructure.Http;
+using TMS.Application.Interfaces.Infrastructure.Http;
 
 namespace TMS.Infrastructure.Http
 {

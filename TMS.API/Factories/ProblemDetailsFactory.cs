@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using TMS.Core.Interfaces.Factories;
+using TMS.Application.Interfaces.Factories;
 
 
 namespace TMS.API.Factories

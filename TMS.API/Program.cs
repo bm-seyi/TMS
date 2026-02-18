@@ -8,10 +8,10 @@ using TMS.API.ExceptionHandlers;
 using TMS.API.Factories;
 using TMS.API.HealthChecks;
 using TMS.API.Middleware;
-using TMS.Core.Extensions;
-using TMS.Core.Interfaces.Factories;
-using TMS.Core.Mapping;
-using TMS.Core.Queries;
+using TMS.Application.Extensions;
+using TMS.Application.Interfaces.Factories;
+using TMS.Application.Mapping;
+using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
