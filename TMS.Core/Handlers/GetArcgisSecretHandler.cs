@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TMS.Core.Interfaces.Services;
 using TMS.Core.Queries;
-using TMS.Models.Secrets;
+using TMS.Domain.Secrets;
 
 namespace TMS.Core.Handlers
 {

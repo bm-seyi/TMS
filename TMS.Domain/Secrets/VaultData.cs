@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace TMS.Models.Secrets
+namespace TMS.Domain.Secrets
 {
     public sealed record VaultData<T>
     {

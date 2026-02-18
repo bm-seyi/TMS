@@ -1,4 +1,4 @@
-namespace TMS.Models.Secrets
+namespace TMS.Domain.Secrets
 {
     public sealed record ArcgisSecret
     {

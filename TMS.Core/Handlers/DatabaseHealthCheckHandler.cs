@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using TMS.Core.Interfaces.Infrastructure.Persistence.Procedures;
 using TMS.Core.Queries;
-using TMS.Models.DTOs;
+using TMS.Domain.DTOs;
 
 namespace TMS.Core.Handlers
 {

@@ -1,5 +1,5 @@
 using MediatR;
-using TMS.Models.Secrets;
+using TMS.Domain.Secrets;
 
 namespace TMS.Core.Queries
 {

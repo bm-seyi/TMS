@@ -1,6 +1,6 @@
 using MediatR;
 using TMS.Core.Interfaces;
-using TMS.Models.DTOs;
+using TMS.Domain.DTOs;
 
 namespace TMS.Core.Queries
 {

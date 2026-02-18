@@ -1,4 +1,4 @@
-using TMS.Models.DTOs;
+using TMS.Domain.DTOs;
 
 namespace TMS.Core.Interfaces.Infrastructure.Persistence.Procedures
 {

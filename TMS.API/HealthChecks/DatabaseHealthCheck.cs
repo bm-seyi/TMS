@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using MediatR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TMS.Core.Queries;
-using TMS.Models.DTOs;
+using TMS.Domain.DTOs;
 
 
 [assembly: InternalsVisibleTo("TMS.UnitTests")]

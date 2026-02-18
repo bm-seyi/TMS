@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace TMS.Models.JsonConverters
+namespace TMS.Domain.JsonConverters
 {
     public sealed class DateTimeNullableConverter : JsonConverter<DateTime?>
 {

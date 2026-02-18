@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using TMS.Models.JsonConverters;
+using TMS.Domain.JsonConverters;
 
-namespace TMS.Models.Secrets
+namespace TMS.Domain.Secrets
 {
     public sealed record Metadata
     {

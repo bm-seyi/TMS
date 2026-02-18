@@ -1,4 +1,4 @@
-namespace TMS.Models.DTOs
+namespace TMS.Domain.DTOs
 {
     public sealed record LinesReadDTO
     {
