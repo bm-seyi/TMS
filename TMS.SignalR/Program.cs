@@ -1,7 +1,7 @@
 using StackExchange.Redis;
-using TMS.Core.Extensions;
-using TMS.Core.Mapping;
-using TMS.Core.Queries;
+using TMS.Application.Extensions;
+using TMS.Application.Mapping;
+using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
 using TMS.SignalR.Hubs;
 

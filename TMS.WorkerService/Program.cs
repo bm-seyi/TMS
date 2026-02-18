@@ -1,4 +1,4 @@
-using TMS.Core.Extensions;
+using TMS.Application.Extensions;
 using TMS.WorkerService.BackgroundServices;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);

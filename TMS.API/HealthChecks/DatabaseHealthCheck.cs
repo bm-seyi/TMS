@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using MediatR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using TMS.Core.Queries;
+using TMS.Application.Queries;
 using TMS.Domain.DTOs;
 
 

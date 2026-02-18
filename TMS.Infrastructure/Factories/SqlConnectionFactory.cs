@@ -2,9 +2,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using TMS.Core.Interfaces.Factories;
+using TMS.Application.Interfaces.Factories;
 using System.Runtime.CompilerServices;
-using TMS.Core.Extensions;
+using TMS.Application.Extensions;
 
 
 [assembly: InternalsVisibleTo("TMS.UnitTests")]

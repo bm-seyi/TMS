@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TMS.Core.Extensions;
-using TMS.Core.Interfaces.Factories;
+using TMS.Application.Extensions;
+using TMS.Application.Interfaces.Factories;
 
 
 namespace TMS.API.ExceptionHandlers

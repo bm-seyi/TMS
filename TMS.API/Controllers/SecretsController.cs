@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
-using TMS.Core.Queries;
+using TMS.Application.Queries;
 using TMS.Domain.Secrets;
 
 
