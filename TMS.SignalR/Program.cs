@@ -43,6 +43,7 @@ builder.Services.AddHealthCheckProcedures();
 builder.Services.AddLinesProcedures();
 builder.Services.AddSecretService();
 builder.Services.AddVaultClient(builder.Configuration);
+builder.Services.AddLinesDataHub(builder.Configuration);
 
 WebApplication app = builder.Build();
 

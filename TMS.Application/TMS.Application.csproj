@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="Confluent.Kafka" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
