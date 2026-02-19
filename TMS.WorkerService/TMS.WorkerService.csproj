@@ -5,12 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TMS.Application\TMS.Application.csproj" />
     <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\TMS.Infrastructure\TMS.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

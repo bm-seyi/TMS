@@ -1,25 +1,26 @@
 using System.Diagnostics;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using TMS.Application.Interfaces.Services;
+using TMS.Application.Interfaces.Infrastructure.Messaging;
 
 
-namespace TMS.Application.Services
+namespace TMS.Infrastructure.Messaging
 {
     internal sealed class KafkaService : IKafkaService
     {
         private readonly ILogger<KafkaService> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Services.KafkaService");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Messaging.KafkaService");
 
-        public KafkaService(ILogger<KafkaService> logger)
+        public KafkaService(ILogger<KafkaService> logger, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task CreateTopicAsync(string topicName, string bootstrapServers)
         {
-            using Activity? activity = _activitySource.StartActivity("KafkaService.CreateTopicAsync");
+            using Activity? activity = _activitySource.StartActivity("KafkaLinesEventSubscriber.CreateTopicAsync");
 
             _logger.LogInformation("Creating Kafka topic: {TopicName}", topicName);
 
@@ -62,20 +63,6 @@ namespace TMS.Application.Services
                     throw;
                 }
             }
-        }
-
-        public IConsumer<Ignore, string> CreateConsumer(string bootstrapServers, string groupId)
-        {
-            using Activity? activity = _activitySource.StartActivity("KafkaService.CreateConsumer");
-            
-            ConsumerConfig consumerConfig = new ConsumerConfig
-            {
-                BootstrapServers = bootstrapServers,
-                GroupId = groupId,
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
-
-            return new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
         }
     }
 }

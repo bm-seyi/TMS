@@ -1,4 +1,6 @@
 using TMS.Application.Extensions;
+using TMS.Application.Queries;
+using TMS.Infrastructure.Extensions;
 using TMS.WorkerService.BackgroundServices;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
@@ -12,10 +14,20 @@ builder.Configuration
 builder.AddServiceDefaults();
 
 builder.Services.AddLogging();
+
+// MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DatabaseHealthCheckQuery).Assembly));
+builder.Services.AddConnectionBehaviour();
+builder.Services.AddTransactionBehaviour();
+
+// Services
+builder.Services.AddKafkaService();
+builder.Services.AddKafkaLinesEventSubscriber();
+builder.Services.AddLinesDataHub(builder.Configuration);
+
+// Background Services
 builder.Services.AddHostedService<LinesWorker>();
 
-builder.Services.AddKafkaService();
-builder.Services.AddHubConnectionFactory();
 
 IHost host = builder.Build();
 
