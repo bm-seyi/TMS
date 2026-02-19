@@ -11,7 +11,7 @@ namespace TMS.Application.PipelineBehaviours
     {
         private readonly ILogger<ConnectionBehaviour<TRequest, TResponse>> _logger;
         private readonly ISqlSession _sqlSession;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Behaviours.ConnectionBehaviour");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.Behaviours.ConnectionBehaviour");
 
         public ConnectionBehaviour(ILogger<ConnectionBehaviour<TRequest, TResponse>> logger, ISqlSession sqlSession)
         {

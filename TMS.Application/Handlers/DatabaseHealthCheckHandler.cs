@@ -11,7 +11,7 @@ namespace TMS.Application.Handlers
     {
         private readonly ILogger<DatabaseHealthCheckHandler> _logger;
         private readonly IHealthCheckProcedures _healthCheckProcedures;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Handlers.DatabaseHealthCheckHandler");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.Handlers.DatabaseHealthCheckHandler");
 
         public DatabaseHealthCheckHandler(ILogger<DatabaseHealthCheckHandler> logger, IHealthCheckProcedures healthCheckProcedures)
         {

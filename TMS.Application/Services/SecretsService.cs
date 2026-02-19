@@ -12,7 +12,7 @@ namespace TMS.Application.Services
         private readonly ILogger<SecretsService> _logger;
         private readonly IVaultClient _vaultClient;
         private readonly IMapper _mapper;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Services.SecretsService");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.Services.SecretsService");
         public SecretsService(ILogger<SecretsService> logger, IVaultClient vaultClient, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
