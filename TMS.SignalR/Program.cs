@@ -1,3 +1,4 @@
+using MediatR;
 using StackExchange.Redis;
 using TMS.Application.Extensions;
 using TMS.Application.Mapping;
@@ -29,9 +30,10 @@ builder.Services.AddSignalR()
     });
 
 // MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(LinesDataQuery).Assembly));
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);});
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
+builder.Services.AddGetLinesDataHandler();
 
 // AutoMapper
 builder.Services.AddAutoMapper(crg => {}, typeof(AutoMapperProfile));
@@ -39,11 +41,7 @@ builder.Services.AddAutoMapper(crg => {}, typeof(AutoMapperProfile));
 // Other Services
 builder.Services.AddSqlConnectionFactory();
 builder.Services.AddSqlSession();
-builder.Services.AddHealthCheckProcedures();
 builder.Services.AddLinesProcedures();
-builder.Services.AddSecretService();
-builder.Services.AddVaultClient(builder.Configuration);
-builder.Services.AddLinesDataHub(builder.Configuration);
 
 WebApplication app = builder.Build();
 

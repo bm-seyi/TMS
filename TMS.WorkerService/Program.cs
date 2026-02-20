@@ -1,3 +1,4 @@
+using MediatR;
 using TMS.Application.Extensions;
 using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
@@ -16,7 +17,7 @@ builder.AddServiceDefaults();
 builder.Services.AddLogging();
 
 // MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DatabaseHealthCheckQuery).Assembly));
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);});
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
 
