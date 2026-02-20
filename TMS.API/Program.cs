@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -11,7 +12,6 @@ using TMS.API.Middleware;
 using TMS.Application.Extensions;
 using TMS.Application.Interfaces.Factories;
 using TMS.Application.Mapping;
-using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -61,7 +61,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 // MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(DatabaseHealthCheckQuery).Assembly));
+builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);});
+builder.Services.AddDatabaseHealthCheckHandler();
+builder.Services.AddGetArcgisSecretHandler();
 builder.Services.AddConnectionBehaviour();
 builder.Services.AddTransactionBehaviour();
 
@@ -76,7 +78,6 @@ builder.Services.AddSqlConnectionFactory();
 builder.Services.AddLinesProcedures();
 builder.Services.AddSecretService();
 builder.Services.AddVaultClient(builder.Configuration);
-builder.Services.AddLinesDataHub(builder.Configuration);
 
 WebApplication app = builder.Build();
 
