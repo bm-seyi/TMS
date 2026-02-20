@@ -11,7 +11,7 @@ namespace TMS.Application.Handlers
     {
         private readonly ILogger<GetArcgisSecretHandler> _logger;
         private readonly ISecretService _secretService;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Core.Handlers.GetArcgisSecretHandler");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.Handlers.GetArcgisSecretHandler");
 
         public GetArcgisSecretHandler(ILogger<GetArcgisSecretHandler> logger, ISecretService secretService)
         {
