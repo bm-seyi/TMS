@@ -12,7 +12,9 @@ using TMS.API.Middleware;
 using TMS.Application.Extensions;
 using TMS.Application.Interfaces.Factories;
 using TMS.Application.Mapping;
+using Asp.Versioning;
 using TMS.Infrastructure.Extensions;
+
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    options.UnsupportedApiVersionStatusCode = StatusCodes.Status404NotFound;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 // Health Checks
 builder.Services.AddHealthChecks()
