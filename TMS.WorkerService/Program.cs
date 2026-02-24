@@ -1,6 +1,5 @@
 using MediatR;
 using TMS.Application.Extensions;
-using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
 using TMS.WorkerService.BackgroundServices;
 
@@ -13,8 +12,6 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.AddServiceDefaults();
-
-builder.Services.AddLogging();
 
 // MediatR
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);});

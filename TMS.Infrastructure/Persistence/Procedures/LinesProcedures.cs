@@ -12,7 +12,7 @@ namespace TMS.Infrastructure.Persistence.Procedures
     {
         private readonly ILogger<LinesProcedures> _logger;
         private readonly ISqlSession _sqlSession;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Persistence.Procedures.LinesProcedures");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Persistence.Procedures.LinesProcedures");
 
         public LinesProcedures(ILogger<LinesProcedures> logger, ISqlSession sqlSession)
         {

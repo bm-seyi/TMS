@@ -13,7 +13,7 @@ namespace TMS.Infrastructure.Persistence
     {
         private readonly ILogger<SqlSession> _logger;
         private readonly Lazy<SqlConnection> _lazyConnection;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Persistence.SqlSession");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Persistence.SqlSession");
  
         public SqlSession(ILogger<SqlSession> logger, ISqlConnectionFactory sqlConnectionFactory)
         {
