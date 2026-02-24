@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Confluent.Kafka;
 using Confluent.Kafka.Admin;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using TMS.Application.Interfaces.Infrastructure.Messaging;
 
@@ -13,7 +12,7 @@ namespace TMS.Infrastructure.Messaging
         private readonly ILogger<KafkaService> _logger;
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Messaging.KafkaService");
 
-        public KafkaService(ILogger<KafkaService> logger, IMediator mediator)
+        public KafkaService(ILogger<KafkaService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

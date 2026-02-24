@@ -75,26 +75,38 @@ public static class Extensions
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()
                     .AddRedisInstrumentation()
+
+                    // API
                     .AddSource("TMS.API.ExceptionHandlers.ExceptionHandler")
                     .AddSource("TMS.API.ExceptionHandlers.OperationCanceledHandler")
                     .AddSource("TMS.API.HealthChecks.DatabaseHealthCheck")
                     .AddSource("TMS.API.Factories.ProblemDetailsFactory")
                     .AddSource("TMS.API.Middleware.TraceMiddleware")
-                    .AddSource("TMS.Core.Behaviours.ConnectionBehaviour")
-                    .AddSource("TMS.Core.Behaviours.TransactionBehaviour")
-                    .AddSource("TMS.Core.Factories.HubConnectionFactory")
-                    .AddSource("TMS.Core.Handlers.GetArcgisSecretHandler")
-                    .AddSource("TMS.Core.HttpClients.VaultClient")
-                    .AddSource("TMS.Core.Handlers.LinesDataHandler")
-                    .AddSource("TMS.Core.Handlers.DatabaseHealthCheckHandler")
-                    .AddSource("TMS.Core.Services.KafkaService")
-                    .AddSource("TMS.Core.Services.SecretsService")
-                    .AddSource("TMS.Persistence.Factories.SqlConnectionFactory")
-                    .AddSource("TMS.Persistence.Procedures.HealthCheckProcedures")
-                    .AddSource("TMS.Persistence.Procedures.LinesProcedures")
-                    .AddSource("TMS.Persistence.SqlSession")
+
+                    // SignalR
                     .AddSource("TMS.SignalR.Hubs.LinesDataHub")
-                    .AddSource("TMS.WorkerService.BackgroundServices.LinesWorker");
+
+                    // Worker Service
+                    .AddSource("TMS.WorkerService.BackgroundServices.LinesWorker")
+
+                    // Application
+                    .AddSource("TMS.Application.Behaviours.ConnectionBehaviour")
+                    .AddSource("TMS.Application.Behaviours.TransactionBehaviour")
+                    .AddSource("TMS.Application.Handlers.GetArcgisSecretHandler")
+                    .AddSource("TMS.Application.Handlers.LinesDataHandler")
+                    .AddSource("TMS.Application.Handlers.DatabaseHealthCheckHandler")
+                    .AddSource("TMS.Application.Services.SecretsService")
+                    .AddSource("TMS.Application.NotificationHandlers.LinesUpdatedHandler")
+
+                    // Infrastructure
+                    .AddSource("TMS.Infrastructure.Http.VaultClient")
+                    .AddSource("TMS.Infrastructure.Messaging.KafkaService")
+                    .AddSource("TMS.Infrastructure.Factories.SqlConnectionFactory")
+                    .AddSource("TMS.Infrastructure.HubClients")
+                    .AddSource("TMS.Infrastructure.Messaging.KafkaLinesEventSubscriber")
+                    .AddSource("TMS.Infrastructure.Persistence.Procedures.HealthCheckProcedures")
+                    .AddSource("TMS.Infrastructure.Persistence.Procedures.LinesProcedures")
+                    .AddSource("TMS.Infrastructure.Persistence.SqlSession");
             });
 
         builder.AddOpenTelemetryExporters();

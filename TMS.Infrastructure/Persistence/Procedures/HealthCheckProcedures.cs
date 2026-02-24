@@ -12,7 +12,7 @@ namespace TMS.Infrastructure.Persistence.Procedures
     {
         private readonly ILogger<HealthCheckProcedures> _logger;
         private readonly ISqlSession _sqlSession;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Persistence.Procedures.HealthCheckProcedures");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Persistence.Procedures.HealthCheckProcedures");
  
         public HealthCheckProcedures(ILogger<HealthCheckProcedures> logger, ISqlSession sqlSession)
         {
