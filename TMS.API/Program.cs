@@ -14,6 +14,7 @@ using TMS.Application.Interfaces.Factories;
 using TMS.Application.Mapping;
 using Asp.Versioning;
 using TMS.Infrastructure.Extensions;
+using Microsoft.AspNetCore.HttpLogging;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -70,6 +71,12 @@ builder.Services.AddHealthChecks()
         };
     });
 
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders |
+                            HttpLoggingFields.ResponsePropertiesAndHeaders;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
@@ -102,9 +109,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseMiddleware<TraceMiddleware>();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseHttpLogging();
+app.UseMiddleware<TraceMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
