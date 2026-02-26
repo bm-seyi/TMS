@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace TMS.API.Controllers
     [ApiController]
     [Authorize]
     [RequireHttps]
-    [Route("api/v1/secrets")]
+    [Route("api/v{version:apiVersion}/secrets")]
     public sealed class SecretsController : ControllerBase
     {
         private readonly ILogger<SecretsController> _logger;
@@ -24,6 +25,7 @@ namespace TMS.API.Controllers
         }
 
         [HttpGet("arcgis")]
+        [MapToApiVersion(1.0)]
         [RequiredScope("Arcgis.Read")]
         [ProducesResponseType<ArcgisSecret>(StatusCodes.Status200OK)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status499ClientClosedRequest)]

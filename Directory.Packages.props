@@ -27,6 +27,10 @@
         <PackageVersion Include="Microsoft.Identity.Web" Version="4.3.0" />
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.4" />
 
+        <!-- Dotnet Foundation-->
+        <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.1" />
+        <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+
         <!-- OpenTelemetry-->
         <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
         <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />

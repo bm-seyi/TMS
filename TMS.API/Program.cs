@@ -12,7 +12,10 @@ using TMS.API.Middleware;
 using TMS.Application.Extensions;
 using TMS.Application.Interfaces.Factories;
 using TMS.Application.Mapping;
+using Asp.Versioning;
 using TMS.Infrastructure.Extensions;
+using Microsoft.AspNetCore.HttpLogging;
+
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    options.UnsupportedApiVersionStatusCode = StatusCodes.Status404NotFound;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 // Health Checks
 builder.Services.AddHealthChecks()
@@ -55,6 +70,12 @@ builder.Services.AddHealthChecks()
         UnhealthyUtilizationPercentage = 90
         };
     });
+
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders |
+                            HttpLoggingFields.ResponsePropertiesAndHeaders;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -88,9 +109,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseMiddleware<TraceMiddleware>();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseHttpLogging();
+app.UseMiddleware<TraceMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
