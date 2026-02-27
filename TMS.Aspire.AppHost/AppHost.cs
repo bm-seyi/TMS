@@ -73,9 +73,12 @@ builder.AddProject<TMS_WorkerService>("WorkerService")
     .WaitFor(debezium)
     .WaitFor(kafka);
 
-builder.AddProject<TMS_API>("TMS-API")
+IResourceBuilder<ProjectResource> tmsApi = builder.AddProject<TMS_API>("TMS-API")
     .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection");
+
+builder.AddProject<TMS_Gateway>("TMS-Gateway")
+    .WaitFor(tmsApi);
 
 DistributedApplication distributedApplication = builder.Build();
 
