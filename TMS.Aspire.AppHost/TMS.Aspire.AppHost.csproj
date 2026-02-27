@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.1.1">
+<Project Sdk="Aspire.AppHost.Sdk/13.1.2">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TMS.API\TMS.API.csproj" />
+    <ProjectReference Include="..\TMS.Gateway\TMS.Gateway.csproj" />
     <ProjectReference Include="..\TMS.SignalR\TMS.SignalR.csproj" />
     <ProjectReference Include="..\TMS.WorkerService\TMS.WorkerService.csproj" />
   </ItemGroup>

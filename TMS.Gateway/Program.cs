@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Identity.Web;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,13 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.AddServiceDefaults();
+
+// Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration, jwtBearerScheme: "Microsoft");
+
+// Authorization
+builder.Services.AddAuthorization();
 
 builder.Services.AddHealthChecks()
     .AddResourceUtilizationHealthCheck(o =>
@@ -32,6 +41,8 @@ builder.Services
 
 WebApplication app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapReverseProxy();
 
 await app.RunAsync();
