@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 
@@ -13,11 +14,17 @@ builder.Configuration
 builder.AddServiceDefaults();
 
 // Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication("Microsoft")
     .AddMicrosoftIdentityWebApi(builder.Configuration, jwtBearerScheme: "Microsoft");
 
 // Authorization
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Authenticated", x =>
+    {
+        x.RequireAuthenticatedUser();
+    });
+});
 
 builder.Services.AddHealthChecks()
     .AddResourceUtilizationHealthCheck(o =>
