@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using System.Net.Mime;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
 
@@ -50,6 +50,21 @@ WebApplication app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    },
+ 
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = MediaTypeNames.Application.Json;
+        await context.Response.WriteAsJsonAsync(report);
+    }
+});
 app.MapReverseProxy();
 
 await app.RunAsync();
