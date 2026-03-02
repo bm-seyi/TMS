@@ -83,6 +83,9 @@ public static class Extensions
                     .AddSource("TMS.API.Factories.ProblemDetailsFactory")
                     .AddSource("TMS.API.Middleware.TraceMiddleware")
 
+                    // Gateway
+                    .AddSource("Yarp.ReverseProxy")
+
                     // SignalR
                     .AddSource("TMS.SignalR.Hubs.LinesDataHub")
 
