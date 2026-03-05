@@ -2,6 +2,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
+using TMS.Gateway.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,8 @@ builder.Services.AddHealthChecks()
         UnhealthyUtilizationPercentage = 90
         };
     });
+
+builder.Services.AddConfiguredRateLimiting(builder.Configuration);
 
 builder.Services
     .AddReverseProxy()
