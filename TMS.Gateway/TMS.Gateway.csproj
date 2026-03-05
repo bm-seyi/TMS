@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\TMS.Domain\TMS.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
