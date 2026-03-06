@@ -2,7 +2,6 @@ using MediatR;
 using StackExchange.Redis;
 using TMS.Application.Extensions;
 using TMS.Application.Mapping;
-using TMS.Application.Queries;
 using TMS.Infrastructure.Extensions;
 using TMS.SignalR.Hubs;
 
@@ -16,7 +15,7 @@ builder.Configuration
 
 builder.AddServiceDefaults();
 
-string redisPassword = builder.Configuration.GetRequiredValue<string>("Parameters:RedisPassword");
+string redisPassword = builder.Configuration.GetRequiredValue<string>("Redis:Password");
 string redisEndpoint = builder.Configuration.GetRequiredValue<string>("Redis:Endpoint");
 
 builder.Services.AddSignalR()
