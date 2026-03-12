@@ -5,7 +5,7 @@ namespace TMS.API.Middleware
     public sealed class TraceMiddleware
     {
         private readonly RequestDelegate _next;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API.Middleware.TraceMiddleware");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
 
         public TraceMiddleware(RequestDelegate next)
         {

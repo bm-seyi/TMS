@@ -14,7 +14,7 @@ namespace TMS.Infrastructure.Messaging
         private readonly ILogger<KafkaLinesEventSubscriber> _logger;
         private readonly IKafkaService _kafkaService;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Messaging.KafkaLinesEventSubscriber");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure");
 
         public KafkaLinesEventSubscriber(ILogger<KafkaLinesEventSubscriber> logger, IKafkaService kafkaService, IServiceScopeFactory serviceScopeFactory)
         {

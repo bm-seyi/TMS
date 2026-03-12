@@ -1,13 +1,9 @@
-using System.Diagnostics;
-using System.Reflection;
 using Grafana.OpenTelemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.ServiceDiscovery;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -76,41 +72,12 @@ public static class Extensions
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()
                     .AddRedisInstrumentation()
-
-                    // API
-                    .AddSource("TMS.API.ExceptionHandlers.ExceptionHandler")
-                    .AddSource("TMS.API.ExceptionHandlers.OperationCanceledHandler")
-                    .AddSource("TMS.API.HealthChecks.DatabaseHealthCheck")
-                    .AddSource("TMS.API.Factories.ProblemDetailsFactory")
-                    .AddSource("TMS.API.Middleware.TraceMiddleware")
-
-                    // Gateway
+                    .AddSource("TMS.API")
                     .AddSource("Yarp.ReverseProxy")
-
-                    // SignalR
-                    .AddSource("TMS.SignalR.Hubs.LinesDataHub")
-
-                    // Worker Service
-                    .AddSource("TMS.WorkerService.BackgroundServices.LinesWorker")
-
-                    // Application
-                    .AddSource("TMS.Application.Behaviours.ConnectionBehaviour")
-                    .AddSource("TMS.Application.Behaviours.TransactionBehaviour")
-                    .AddSource("TMS.Application.Handlers.GetArcgisSecretHandler")
-                    .AddSource("TMS.Application.Handlers.LinesDataHandler")
-                    .AddSource("TMS.Application.Handlers.DatabaseHealthCheckHandler")
-                    .AddSource("TMS.Application.Services.SecretsService")
-                    .AddSource("TMS.Application.NotificationHandlers.LinesUpdatedHandler")
-
-                    // Infrastructure
-                    .AddSource("TMS.Infrastructure.Http.VaultClient")
-                    .AddSource("TMS.Infrastructure.Messaging.KafkaService")
-                    .AddSource("TMS.Infrastructure.Factories.SqlConnectionFactory")
-                    .AddSource("TMS.Infrastructure.HubClients")
-                    .AddSource("TMS.Infrastructure.Messaging.KafkaLinesEventSubscriber")
-                    .AddSource("TMS.Infrastructure.Persistence.Procedures.HealthCheckProcedures")
-                    .AddSource("TMS.Infrastructure.Persistence.Procedures.LinesProcedures")
-                    .AddSource("TMS.Infrastructure.Persistence.SqlSession");
+                    .AddSource("TMS.SignalR")
+                    .AddSource("TMS.WorkerService")
+                    .AddSource("TMS.Application")
+                    .AddSource("TMS.Infrastructure");
             });
 
         builder.AddOpenTelemetryExporters();

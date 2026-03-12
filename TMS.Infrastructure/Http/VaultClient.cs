@@ -9,7 +9,7 @@ namespace TMS.Infrastructure.Http
     {
         private readonly ILogger<VaultClient> _logger;
         private readonly HttpClient _httpClient;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Http.VaultClient");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure");
 
         public VaultClient(ILogger<VaultClient> logger, HttpClient httpClient)
         {

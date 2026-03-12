@@ -11,7 +11,7 @@ namespace TMS.SignalR.Hubs
     {
         private readonly ILogger<LinesDataHub> _logger;
         private readonly IMediator _mediator;
-        private readonly static ActivitySource _activitySource = new ActivitySource("TMS.SignalR.Hubs.LinesDataHub");
+        private readonly static ActivitySource _activitySource = new ActivitySource("TMS.SignalR");
 
         public LinesDataHub(ILogger<LinesDataHub> logger, IMediator mediator)
         {

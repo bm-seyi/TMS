@@ -1,5 +1,4 @@
 using MediatR;
-using TMS.Domain.DTOs;
 
 namespace TMS.Application.Events
 {

@@ -10,7 +10,7 @@ namespace TMS.Infrastructure.HubClients
     internal sealed class LinesDataHubClient : HubClientBase, ILinesDataHubClient
     {
         private readonly ILogger<LinesDataHubClient> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.HubClients");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure");
 
         public LinesDataHubClient(ILogger<LinesDataHubClient> logger, [FromKeyedServices("LinesDataHub")] HubConnection hubConnection) : base(hubConnection)
         {

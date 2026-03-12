@@ -12,7 +12,7 @@ namespace TMS.Application.Handlers
     {
         private readonly ILogger<LinesDataHandler> _logger;
         private readonly ILinesProcedures _linesProcedures;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.Handlers.LinesDataHandler");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application");
 
         public LinesDataHandler(ILogger<LinesDataHandler> logger, ILinesProcedures linesProcedures)
         {

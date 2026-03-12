@@ -2,41 +2,41 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Diagnostics;
 using TMS.Application.Extensions;
-using TMS.Application.Interfaces.Factories;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 
 namespace TMS.API.ExceptionHandlers
 {
-    public sealed class ExceptionHandler : IExceptionHandler
+    internal sealed class ExceptionHandler : IExceptionHandler
     {
         private readonly ILogger<ExceptionHandler> _logger;
         private readonly IProblemDetailsWriter _problemDetailsWriter;
-        private readonly IProblemDetailsFactory _problemDetailsFactory;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API.ExceptionHandlers.ExceptionHandler");
+        private readonly ProblemDetailsFactory _problemDetailsFactory;
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
  
-        public ExceptionHandler(ILogger<ExceptionHandler> logger, IProblemDetailsWriter problemDetailsWriter, IProblemDetailsFactory problemDetailsFactory)
+        public ExceptionHandler(ILogger<ExceptionHandler> logger, IProblemDetailsWriter problemDetailsWriter, ProblemDetailsFactory problemDetailsFactory)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _problemDetailsWriter = problemDetailsWriter ?? throw new ArgumentNullException(nameof(problemDetailsWriter));
             _problemDetailsFactory = problemDetailsFactory ?? throw new ArgumentNullException(nameof(problemDetailsFactory));
         }
 
-        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            using Activity? activity = _activitySource.StartActivity("ExceptionHandler.TryHandleAsync");
- 
-            ProblemDetails problemDetails = _problemDetailsFactory.CreateProblemDetails("An unexpected error occurred.", "Something went wrong while processing your request.", StatusCodes.Status500InternalServerError);
- 
+            using Activity? _  =_activitySource.StartActivity("ExceptionHandler.TryHandleAsync");
+
+            ProblemDetails problemDetails = _problemDetailsFactory.CreateProblemDetails(httpContext, StatusCodes.Status500InternalServerError, "An unexpected error occurred.", detail: "Something went wrong while processing your request.");
+            
             ProblemDetailsContext problemDetailsContext = new ProblemDetailsContext()
             {
                 HttpContext = httpContext,
                 ProblemDetails = problemDetails
             };
-           
+         
             await _problemDetailsWriter.WriteAsync(problemDetailsContext);
-           
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Sanitize());
- 
+            
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
+
             return true;
         }
     }

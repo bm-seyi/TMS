@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ namespace TMS.API.Controllers
     {
         private readonly ILogger<SecretsController> _logger;
         private readonly IMediator _mediator;
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
 
         public SecretsController(ILogger<SecretsController> logger, IMediator mediator)
         {
@@ -32,6 +34,8 @@ namespace TMS.API.Controllers
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetArcgisSecretAsync(CancellationToken cancellationToken)
         {
+            using Activity? _ = _activitySource.StartActivity("SecretsController.GetArcgisSecretAsync");
+            
             _logger.LogInformation("Received request to get ArcGIS secret.");
 
             ArcgisSecret secret = await _mediator.Send(new GetArcgisSecretQuery(), cancellationToken);
