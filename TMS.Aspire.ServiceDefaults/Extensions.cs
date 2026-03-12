@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Grafana.OpenTelemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -49,6 +50,7 @@ public static class Extensions
         {
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
+            logging.UseGrafana();
         });
 
         builder.Services.AddOpenTelemetry()

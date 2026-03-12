@@ -13,6 +13,8 @@ namespace TMS.API.Controllers
     [ApiController]
     [Authorize]
     [RequireHttps]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Route("api/v{version:apiVersion}/secrets")]
     public sealed class SecretsController : ControllerBase
     {
@@ -31,7 +33,6 @@ namespace TMS.API.Controllers
         [RequiredScope("Arcgis.Read")]
         [ProducesResponseType<ArcgisSecret>(StatusCodes.Status200OK)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status499ClientClosedRequest)]
-        [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetArcgisSecretAsync(CancellationToken cancellationToken)
         {
             using Activity? _ = _activitySource.StartActivity("SecretsController.GetArcgisSecretAsync");
