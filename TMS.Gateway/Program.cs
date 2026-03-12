@@ -47,7 +47,13 @@ builder.Services.AddConfiguredRateLimiting(builder.Configuration);
 
 builder.Services
     .AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .ConfigureHttpClient((context, handler) =>
+    {
+        handler.MaxConnectionsPerServer = 512;
+        handler.PooledConnectionLifetime = TimeSpan.FromMinutes(5);
+        handler.EnableMultipleHttp2Connections = true;
+    });
 
 WebApplication app = builder.Build();
 
