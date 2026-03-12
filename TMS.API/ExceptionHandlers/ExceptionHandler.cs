@@ -25,7 +25,7 @@ namespace TMS.API.ExceptionHandlers
         {
             using Activity? _  =_activitySource.StartActivity("ExceptionHandler.TryHandleAsync");
 
-            ProblemDetails problemDetails = _problemDetailsFactory.CreateProblemDetails(httpContext, StatusCodes.Status500InternalServerError, "An unexpected error occurred.", detail: "Something went wrong while processing your request.");
+            ProblemDetails problemDetails = _problemDetailsFactory.CreateProblemDetails(httpContext, StatusCodes.Status500InternalServerError);
             
             ProblemDetailsContext problemDetailsContext = new ProblemDetailsContext()
             {
@@ -35,7 +35,7 @@ namespace TMS.API.ExceptionHandlers
          
             await _problemDetailsWriter.WriteAsync(problemDetailsContext);
             
-            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path);
+            _logger.LogError(exception, "An error occurred while processing the request. Path: {Path}", httpContext.Request.Path.ToString().Sanitize());
 
             return true;
         }
