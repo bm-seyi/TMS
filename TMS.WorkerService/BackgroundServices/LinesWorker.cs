@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
 using TMS.Application.Extensions;
 using TMS.Application.Interfaces.Infrastructure.Messaging;
