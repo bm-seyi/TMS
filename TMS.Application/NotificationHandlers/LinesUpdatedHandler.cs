@@ -12,7 +12,7 @@ namespace TMS.Application.NotificationHandlers
     {
         private readonly ILogger<LinesUpdatedHandler> _logger;
         private readonly ILinesDataHubClient _linesDataHubClient;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application.NotificationHandlers.LinesUpdatedHandler");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application");
 
         public LinesUpdatedHandler(ILogger<LinesUpdatedHandler> logger,  ILinesDataHubClient linesDataHubClient)
         {

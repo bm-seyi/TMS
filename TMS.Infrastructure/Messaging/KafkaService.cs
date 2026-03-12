@@ -10,7 +10,7 @@ namespace TMS.Infrastructure.Messaging
     internal sealed class KafkaService : IKafkaService
     {
         private readonly ILogger<KafkaService> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Messaging.KafkaService");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure");
 
         public KafkaService(ILogger<KafkaService> logger)
         {

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
 using TMS.Application.Extensions;
 using TMS.Application.Interfaces.Infrastructure.Messaging;
@@ -11,7 +10,7 @@ namespace TMS.WorkerService.BackgroundServices
         private readonly ILogger<LinesWorker> _logger;
         private readonly IEventSubscriber _eventSubscriber;
         private readonly IConfiguration _configuration;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.WorkerService.BackgroundServices.LinesWorker");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.WorkerService");
 
         public LinesWorker(ILogger<LinesWorker> logger, IEventSubscriber eventSubscriber, IConfiguration configuration)
         {

@@ -18,7 +18,7 @@ namespace TMS.Infrastructure.Factories
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<SqlConnectionFactory> _logger;
-        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure.Factories.SqlConnectionFactory");
+        private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Infrastructure");
 
         public SqlConnectionFactory(IConfiguration configuration, ILogger<SqlConnectionFactory> logger)
         {
