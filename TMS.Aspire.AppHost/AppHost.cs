@@ -1,23 +1,17 @@
 using Aspire;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Projects;
 using TMS.Aspire.AppHost.Services;
 
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 
-
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
-
-string otelEndpoint = builder.Configuration["Grafana:Endpoint"] ?? throw new InvalidOperationException();
-string otelProtocol = builder.Configuration["Grafana:Protocol"] ?? throw new InvalidOperationException();
-IResourceBuilder<ParameterResource> otelHeader = builder.AddParameter("GrafanaToken", true);
 
 IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", builder.AddParameter("DevServerPassword", secret: true), 1433)
     .WithLifetime(ContainerLifetime.Session)
