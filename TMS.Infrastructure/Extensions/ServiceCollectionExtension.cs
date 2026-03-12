@@ -33,7 +33,8 @@ namespace TMS.Infrastructure.Extensions
                 {
                     x.BaseAddress = new Uri(configuration.GetRequiredValue<string>("Vault:BaseUrl"));
                     x.DefaultRequestHeaders.Add("X-Vault-Token", configuration.GetRequiredValue<string>("Vault:Token"));
-                });
+                })
+                .AddStandardResilienceHandler();
 
                 return services;
             }
