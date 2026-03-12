@@ -72,31 +72,19 @@ IResourceBuilder<ContainerResource> vault = builder.AddContainer("vault", "hashi
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection")
-    .WaitFor(redis)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", otelEndpoint)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_HEADERS", otelHeader)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL", otelProtocol);
+    .WaitFor(redis);
 
 builder.AddProject<TMS_WorkerService>("WorkerService")
     .WaitFor(signalR)
     .WaitFor(debezium)
-    .WaitFor(kafka)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", otelEndpoint)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_HEADERS", otelHeader)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL", otelProtocol);
+    .WaitFor(kafka);
 
 IResourceBuilder<ProjectResource> tmsApi = builder.AddProject<TMS_API>("TMS-API")
     .WaitFor(tmsDatabase)
-    .WithReference(tmsDatabase, "DefaultConnection")
-    .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", otelEndpoint)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_HEADERS", otelHeader)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL", otelProtocol);
-
+    .WithReference(tmsDatabase, "DefaultConnection");
+ 
 builder.AddProject<TMS_Gateway>("TMS-Gateway")
-    .WaitFor(tmsApi)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", otelEndpoint)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_HEADERS", otelHeader)
-    .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL", otelProtocol);
+    .WaitFor(tmsApi);
 
 DistributedApplication distributedApplication = builder.Build();
 
