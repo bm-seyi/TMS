@@ -1,5 +1,6 @@
 using MediatR;
 using TMS.Application.Extensions;
+using TMS.Domain.Configuration;
 using TMS.Infrastructure.Extensions;
 using TMS.WorkerService.BackgroundServices;
 
@@ -22,6 +23,9 @@ builder.Services.AddTransactionBehaviour();
 builder.Services.AddKafkaService();
 builder.Services.AddKafkaLinesEventSubscriber();
 builder.Services.AddLinesDataHub(builder.Configuration);
+
+// Options
+builder.Services.Configure<KafkaOptions>(builder.Configuration.GetSection("Kafka"));
 
 // Background Services
 builder.Services.AddHostedService<LinesWorker>();
