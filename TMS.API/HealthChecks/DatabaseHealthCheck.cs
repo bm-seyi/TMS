@@ -16,17 +16,12 @@ namespace TMS.API.HealthChecks
     /// <remarks>
     /// This health check queries the database status and returns a result indicating whether the database is online.
     /// </remarks>
-    public sealed class DatabaseHealthCheck : IHealthCheck
+    public sealed class DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger, IMediator mediator) : IHealthCheck
     {
-        private readonly ILogger<DatabaseHealthCheck> _logger;
-        private readonly IMediator _mediator;
+        private readonly ILogger<DatabaseHealthCheck> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
-        public DatabaseHealthCheck(ILogger<DatabaseHealthCheck> logger, IMediator mediator)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
- 
+
         /// <summary>
         /// Asynchronously checks the health of the SQL Server database by verifying its online status.
         /// </summary>
