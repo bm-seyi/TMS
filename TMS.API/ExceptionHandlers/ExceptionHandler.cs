@@ -7,21 +7,14 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace TMS.API.ExceptionHandlers
 {
-    internal sealed class ExceptionHandler : IExceptionHandler
+    internal sealed class ExceptionHandler(ILogger<ExceptionHandler> logger, IProblemDetailsWriter problemDetailsWriter, ProblemDetailsFactory problemDetailsFactory) : IExceptionHandler
     {
-        private readonly ILogger<ExceptionHandler> _logger;
-        private readonly IProblemDetailsWriter _problemDetailsWriter;
-        private readonly ProblemDetailsFactory _problemDetailsFactory;
+        private readonly ILogger<ExceptionHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IProblemDetailsWriter _problemDetailsWriter = problemDetailsWriter ?? throw new ArgumentNullException(nameof(problemDetailsWriter));
+        private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory ?? throw new ArgumentNullException(nameof(problemDetailsFactory));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
- 
-        public ExceptionHandler(ILogger<ExceptionHandler> logger, IProblemDetailsWriter problemDetailsWriter, ProblemDetailsFactory problemDetailsFactory)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _problemDetailsWriter = problemDetailsWriter ?? throw new ArgumentNullException(nameof(problemDetailsWriter));
-            _problemDetailsFactory = problemDetailsFactory ?? throw new ArgumentNullException(nameof(problemDetailsFactory));
-        }
 
-         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             using Activity? _  =_activitySource.StartActivity("ExceptionHandler.TryHandleAsync");
 

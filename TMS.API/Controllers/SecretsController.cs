@@ -16,17 +16,11 @@ namespace TMS.API.Controllers
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Route("api/v{version:apiVersion}/secrets")]
-    public sealed class SecretsController : ControllerBase
+    public sealed class SecretsController(ILogger<SecretsController> logger, IMediator mediator) : ControllerBase
     {
-        private readonly ILogger<SecretsController> _logger;
-        private readonly IMediator _mediator;
+        private readonly ILogger<SecretsController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.API");
-
-        public SecretsController(ILogger<SecretsController> logger, IMediator mediator)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
 
         [HttpGet("arcgis")]
         [MapToApiVersion(1.0)]
