@@ -12,6 +12,8 @@ using TMS.Application.Mapping;
 using Asp.Versioning;
 using TMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -48,6 +50,26 @@ builder.Services.AddApiVersioning(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
+});
+
+// Response Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { MediaTypeNames.Application.Json });
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
 });
 
 // Health Checks
@@ -107,6 +129,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseResponseCompression();
 app.UseHttpLogging();
 app.UseAuthentication();
 app.UseAuthorization();
