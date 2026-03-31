@@ -90,11 +90,25 @@ builder.Services.AddHealthChecks()
         };
     });
 
+
+// Http Logging
 builder.Services.AddHttpLogging(options =>
 {
     options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders |
                             HttpLoggingFields.ResponsePropertiesAndHeaders;
 });
+
+// Output Cache
+builder.Services.AddOutputCache(options =>
+{
+    options.DefaultExpirationTimeSpan = TimeSpan.FromSeconds(60);
+    options.AddBasePolicy(policy =>
+    {
+        policy.Cache();
+        policy.Expire(TimeSpan.FromSeconds(60));
+    });
+});
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -133,7 +147,7 @@ app.UseResponseCompression();
 app.UseHttpLogging();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseOutputCache();
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
     ResultStatusCodes =
