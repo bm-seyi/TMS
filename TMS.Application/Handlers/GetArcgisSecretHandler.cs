@@ -7,17 +7,11 @@ using TMS.Domain.Secrets;
 
 namespace TMS.Application.Handlers
 {
-    public sealed class GetArcgisSecretHandler : IRequestHandler<GetArcgisSecretQuery, ArcgisSecret>
+    public sealed class GetArcgisSecretHandler(ILogger<GetArcgisSecretHandler> logger, ISecretService secretService) : IRequestHandler<GetArcgisSecretQuery, ArcgisSecret>
     {
-        private readonly ILogger<GetArcgisSecretHandler> _logger;
-        private readonly ISecretService _secretService;
+        private readonly ILogger<GetArcgisSecretHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly ISecretService _secretService = secretService ?? throw new ArgumentNullException(nameof(secretService));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application");
-
-        public GetArcgisSecretHandler(ILogger<GetArcgisSecretHandler> logger, ISecretService secretService)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _secretService = secretService ?? throw new ArgumentNullException(nameof(secretService));
-        }
 
         public async  Task<ArcgisSecret> Handle(GetArcgisSecretQuery request, CancellationToken cancellationToken)
         {

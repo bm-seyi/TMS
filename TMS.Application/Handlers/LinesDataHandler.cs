@@ -8,17 +8,11 @@ using TMS.Domain.DTOs;
 
 namespace TMS.Application.Handlers
 {
-    public sealed class LinesDataHandler : IRequestHandler<LinesDataQuery, IEnumerable<LinesReadDTO>>
+    public sealed class LinesDataHandler(ILogger<LinesDataHandler> logger, ILinesProcedures linesProcedures) : IRequestHandler<LinesDataQuery, IEnumerable<LinesReadDTO>>
     {
-        private readonly ILogger<LinesDataHandler> _logger;
-        private readonly ILinesProcedures _linesProcedures;
+        private readonly ILogger<LinesDataHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly ILinesProcedures _linesProcedures = linesProcedures ?? throw new ArgumentNullException(nameof(linesProcedures));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application");
-
-        public LinesDataHandler(ILogger<LinesDataHandler> logger, ILinesProcedures linesProcedures)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _linesProcedures = linesProcedures ?? throw new ArgumentNullException(nameof(linesProcedures));
-        }
 
         public async Task<IEnumerable<LinesReadDTO>> Handle(LinesDataQuery request, CancellationToken cancellationToken)
         {
