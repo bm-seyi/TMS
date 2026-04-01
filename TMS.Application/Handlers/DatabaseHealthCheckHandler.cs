@@ -5,19 +5,14 @@ using TMS.Application.Interfaces.Infrastructure.Persistence.Procedures;
 using TMS.Application.Queries;
 using TMS.Domain.DTOs;
 
+
 namespace TMS.Application.Handlers
 {
-    public sealed class DatabaseHealthCheckHandler : IRequestHandler<DatabaseHealthCheckQuery, DatabaseHealthCheckDTO>
+    public sealed class DatabaseHealthCheckHandler(ILogger<DatabaseHealthCheckHandler> logger, IHealthCheckProcedures healthCheckProcedures) : IRequestHandler<DatabaseHealthCheckQuery, DatabaseHealthCheckDTO>
     {
-        private readonly ILogger<DatabaseHealthCheckHandler> _logger;
-        private readonly IHealthCheckProcedures _healthCheckProcedures;
+        private readonly ILogger<DatabaseHealthCheckHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IHealthCheckProcedures _healthCheckProcedures = healthCheckProcedures ?? throw new ArgumentNullException(nameof(healthCheckProcedures));
         private static readonly ActivitySource _activitySource = new ActivitySource("TMS.Application");
-
-        public DatabaseHealthCheckHandler(ILogger<DatabaseHealthCheckHandler> logger, IHealthCheckProcedures healthCheckProcedures)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _healthCheckProcedures = healthCheckProcedures ?? throw new ArgumentNullException(nameof(healthCheckProcedures));
-        }
 
         public async Task<DatabaseHealthCheckDTO> Handle(DatabaseHealthCheckQuery request, CancellationToken cancellationToken)
         {
