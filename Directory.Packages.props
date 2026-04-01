@@ -19,9 +19,9 @@
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
 
         <!-- .NET Aspire-->
-        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.0" />
-        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.2.0" />
-        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.2.0" />
+        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.1" />
+        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.2.1" />
+        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.2.1" />
 
         <!-- Microsoft Misc-->
         <PackageVersion Include="Microsoft.Identity.Web" Version="4.5.0" />
