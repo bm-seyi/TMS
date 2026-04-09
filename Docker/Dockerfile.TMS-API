@@ -19,10 +19,6 @@ COPY TMS.Application/TMS.Application.csproj TMS.Application/
 
 # Restore dependencies
 RUN dotnet restore TMS.API/TMS.API.csproj
-RUN dotnet restore TMS.Aspire.ServiceDefaults/TMS.Aspire.ServiceDefaults.csproj
-RUN dotnet restore TMS.Domain/TMS.Domain.csproj
-RUN dotnet restore TMS.Infrastructure/TMS.Infrastructure.csproj
-RUN dotnet restore TMS.Application/TMS.Application.csproj
 
 # Copy the rest of the source code
 COPY TMS.API/ TMS.API/
