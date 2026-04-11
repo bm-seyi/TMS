@@ -14,6 +14,8 @@ using TMS.Infrastructure.Extensions;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -24,7 +26,11 @@ builder.Configuration
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
 
+// OpenTelemetry
 builder.AddServiceDefaults();
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(x => x.AddAspNetCoreInstrumentation())
+    .WithTracing(x =>  x.AddAspNetCoreInstrumentation(tracing => tracing.Filter = context => !context.Request.Path.StartsWithSegments("/health")));
 
 // Exception Handler
 builder.Services.AddExceptionHandler<OperationCanceledHandler>();
