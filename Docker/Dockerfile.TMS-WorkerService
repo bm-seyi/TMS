@@ -1,43 +1,42 @@
 # Use the official .NET runtime as the base image
-FROM mcr.microsoft.com/dotnet/runtime:10.0.0-alpine3.22 AS base
+FROM mcr.microsoft.com/dotnet/runtime:10.0.5-alpine3.23 AS base
 WORKDIR /app
 EXPOSE 8080
 
 # Use the official .NET SDK image to build the app
-FROM mcr.microsoft.com/dotnet/sdk:10.0.100-alpine3.22  AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.201-alpine3.23 AS build
 WORKDIR /src
 
 # Copy solution and project files
 COPY TMS.slnx ./
-COPY WorkerService/WorkerService.csproj WorkerService/
-COPY Core/Core.csproj Core/
-COPY Persistence/Persistence.csproj Persistence/
-COPY Models/Models.csproj Models/
-COPY ServiceDefaults/ServiceDefaults.csproj ServiceDefaults/
+COPY Directory.Build.props ./
+COPY Directory.Packages.props ./
+COPY TMS.WorkerService/TMS.WorkerService.csproj TMS.WorkerService/
+COPY TMS.Aspire.ServiceDefaults/TMS.Aspire.ServiceDefaults.csproj TMS.Aspire.ServiceDefaults/
+COPY TMS.Domain/TMS.Domain.csproj TMS.Domain/
+COPY TMS.Infrastructure/TMS.Infrastructure.csproj TMS.Infrastructure/
+COPY TMS.Application/TMS.Application.csproj TMS.Application/
+
 
 # Restore dependencies
-RUN dotnet restore WorkerService/WorkerService.csproj
-RUN dotnet restore Core/Core.csproj
-RUN dotnet restore Persistence/Persistence.csproj
-RUN dotnet restore Models/Models.csproj
-RUN dotnet restore ServiceDefaults/ServiceDefaults.csproj
+RUN dotnet restore TMS.WorkerService/TMS.WorkerService.csproj
 
 # Copy the rest of the source code
-COPY WorkerService/ WorkerService/
-COPY Core/ Core/
-COPY Models/ Models/
-COPY Persistence/ Persistence/
-COPY ServiceDefaults/ ServiceDefaults/
+COPY TMS.WorkerService/ TMS.WorkerService/
+COPY TMS.Aspire.ServiceDefaults/ TMS.Aspire.ServiceDefaults/
+COPY TMS.Domain/ TMS.Domain/
+COPY TMS.Infrastructure/ TMS.Infrastructure/
+COPY TMS.Application/ TMS.Application/
 
 # Build the application
-RUN dotnet build WorkerService/WorkerService.csproj -c Release -o /app/build
+RUN dotnet build TMS.WorkerService/TMS.WorkerService.csproj -c Release -o /app/build
 
 # Publish the application
 FROM build AS publish
-RUN dotnet publish WorkerService/WorkerService.csproj -c Release -o /app/publish
+RUN dotnet publish TMS.WorkerService/TMS.WorkerService.csproj -c Release -o /app/publish
 
 # Use the runtime image to serve the app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WorkerService.dll"]
+ENTRYPOINT ["dotnet", "TMS.WorkerService.dll"]
