@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using MediatR;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using TMS.Application.Events;
-using TMS.Application.Interfaces.Factories;
 using TMS.Application.Interfaces.Infrastructure.HubClients;
 
 namespace TMS.Application.NotificationHandlers
