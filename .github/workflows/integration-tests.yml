@@ -1,16 +1,17 @@
-name: MsTest Integration Tests
+name: Integration Tests
 
 permissions:
   contents: read
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 
 jobs:
     build-and-test: 
-        name: MsTest Integration Tests
+        name: Integration Tests
         runs-on: ubuntu-latest
+        timeout-minutes: 20
         env: 
             Parameter__DevServerPassword: testpassword
             Parameter__redisPassword: testpassword
