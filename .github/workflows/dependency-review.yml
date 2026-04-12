@@ -9,10 +9,14 @@ on:
 
 jobs:
   dependency-review:
+    name: Dependency Review
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
       - name: Run dependency review
         uses: actions/dependency-review-action@v4.8.2
+        with:
+          fail-on-severity: moderate

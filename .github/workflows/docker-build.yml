@@ -1,0 +1,40 @@
+name: Build Docker Images
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        include:
+          - name: TMS.API
+            dockerfile: Docker/Dockerfile.TMS-API
+            context: .
+          - name: TMS.SignalR
+            dockerfile: Docker/Dockerfile.TMS-SignalR
+            context: .
+          - name: TMS.WorkerService
+            dockerfile: Docker/Dockerfile.TMS-WorkerService
+            context: .
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: false
