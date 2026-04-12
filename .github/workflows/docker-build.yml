@@ -19,7 +19,7 @@ jobs:
             dockerfile: Docker/Dockerfile.TMS-API
             context: .
           - name: TMS.SignalR
-            dockerfile: Docker/Dockefile.TMS-SignalR
+            dockerfile: Docker/Dockerfile.TMS-SignalR
             context: .
           - name: TMS.WorkerService
             dockerfile: Docker/Dockerfile.TMS-WorkerService
