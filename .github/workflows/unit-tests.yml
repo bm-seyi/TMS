@@ -5,7 +5,14 @@ permissions:
 
 on:
   pull_request:
+    paths:
+      - "TMS.*/**"
+      - "Directory.Build.props"
+      - "Directory.Packages.props"
+      - "TMS.slnx"
+      
   workflow_dispatch:
+
 
 
 jobs:
