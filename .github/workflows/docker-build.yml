@@ -30,6 +30,9 @@ jobs:
           - name: TMS.WorkerService
             dockerfile: Docker/Dockerfile.TMS-WorkerService
             context: .
+          - name: TMS.Gateway
+            dockerfile: Docker/Dockerfile.TMS-Gateway
+            context: .
 
     steps:
       - name: Checkout
