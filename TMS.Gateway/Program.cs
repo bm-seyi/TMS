@@ -2,6 +2,8 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Identity.Web;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using TMS.Gateway.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,10 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 builder.AddServiceDefaults();
+builder.Services.AddOpenTelemetry()
+    .WithMetrics(x => x.AddAspNetCoreInstrumentation())
+    .WithTracing(x =>  x.AddAspNetCoreInstrumentation(tracing => tracing.Filter = context => !context.Request.Path.StartsWithSegments("/health")));
+
 
 // Authentication
 builder.Services.AddAuthentication("Microsoft")

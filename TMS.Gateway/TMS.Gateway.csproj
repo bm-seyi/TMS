@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web"><PropertyGroup>  <UserSecretsId>6bbef48f-56d4-490c-93fa-f53763918b28</UserSecretsId>
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>  
+    <UserSecretsId>6bbef48f-56d4-490c-93fa-f53763918b28</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +12,7 @@
     <PackageReference Include="Yarp.ReverseProxy" />
     <PackageReference Include="Microsoft.Identity.Web" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.ResourceUtilization" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
   </ItemGroup>
 
 </Project>
