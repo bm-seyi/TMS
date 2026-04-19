@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
     <ProjectReference Include="..\TMS.Application\TMS.Application.csproj" />
     <ProjectReference Include="..\TMS.Aspire.ServiceDefaults\TMS.Aspire.ServiceDefaults.csproj" />
     <ProjectReference Include="..\TMS.Infrastructure\TMS.Infrastructure.csproj" />
