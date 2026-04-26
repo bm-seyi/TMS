@@ -36,9 +36,9 @@
         <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
         <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
         <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.1" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.2" />
         <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.0-beta.1" />
 
         <!-- Testing-->
@@ -52,7 +52,7 @@
     
         <!-- Misc-->
         <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0"/>
-        <PackageVersion Include="Grafana.OpenTelemetry.Base" Version="1.5.3"/>
+        <PackageVersion Include="Grafana.OpenTelemetry.Base" Version="1.7.0"/>
         <PackageVersion Include="AutoMapper" Version="16.1.1" />
         <PackageVersion Include="Confluent.Kafka" Version="2.14.0" />
         <PackageVersion Include="MediatR" Version="14.1.0" />
