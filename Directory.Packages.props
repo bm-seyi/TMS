@@ -29,7 +29,7 @@
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.0" />
 
         <!-- Dotnet Foundation-->
-        <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.1" />
+        <PackageVersion Include="Asp.Versioning.Mvc" Version="10.0.0" />
         <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 
         <!-- OpenTelemetry-->
