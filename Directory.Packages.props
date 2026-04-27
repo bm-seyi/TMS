@@ -20,7 +20,7 @@
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
 
         <!-- .NET Aspire-->
-        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.2" />
+        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.2.4" />
         <PackageVersion Include="Aspire.Hosting.Redis" Version="13.2.2" />
         <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.2.2" />
 
