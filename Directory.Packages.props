@@ -26,7 +26,7 @@
 
         <!-- Microsoft Misc-->
         <PackageVersion Include="Microsoft.Identity.Web" Version="4.7.0" />
-        <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+        <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.1" />
 
         <!-- Dotnet Foundation-->
         <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.1" />
