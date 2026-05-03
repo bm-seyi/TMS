@@ -44,6 +44,6 @@ builder.Services.AddLinesProcedures();
 
 WebApplication app = builder.Build();
 
-app.MapHub<LinesDataHub>("/linesDataHub");
+app.MapHub<MapHub>("/mapHub");
 
 await app.RunAsync();
