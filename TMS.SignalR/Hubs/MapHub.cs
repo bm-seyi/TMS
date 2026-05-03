@@ -7,17 +7,11 @@ using TMS.Domain.DTOs;
 
 namespace TMS.SignalR.Hubs;
 
-internal sealed class MapHub : Hub
+internal sealed class MapHub(ILogger<MapHub> logger, IMediator mediator) : Hub
 {
-    private readonly ILogger<MapHub> _logger;
-    private readonly IMediator _mediator;
+    private readonly ILogger<MapHub> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     private readonly static ActivitySource _activitySource = new ActivitySource("TMS.SignalR");
-
-    public MapHub(ILogger<MapHub> logger, IMediator mediator)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
 
     public override async Task OnConnectedAsync()
     {
