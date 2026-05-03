@@ -15,7 +15,7 @@ internal sealed class MapHub(ILogger<MapHub> logger, IMediator mediator) : Hub
 
     public override async Task OnConnectedAsync()
     {
-        using Activity? activity = _activitySource.StartActivity("LinesDataHub.OnConnectedAsync");
+        using Activity? activity = _activitySource.StartActivity("MapHub.OnConnectedAsync");
 
         IEnumerable<LinesReadDTO> linesReadDTOs = await _mediator.Send(new LinesDataQuery(), Context.ConnectionAborted);
 
