@@ -22,16 +22,6 @@ IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevS
 
 IResourceBuilder<SqlServerDatabaseResource> tmsDatabase = devServer.AddDatabase("TMS-Database", "TMS");
 
-IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
-    .WithLifetime(ContainerLifetime.Session)
-    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
-    .WithEnvironment("GROUP_ID", "1")
-    .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
-    .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
-    .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
-    .WaitFor(devServer)
-    .WithHttpEndpoint(port: 8083, targetPort: 8083);
-
 IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confluentinc/cp-kafka", "latest")
     .WithLifetime(ContainerLifetime.Session)
     .WithEnvironment("KAFKA_NODE_ID", "1")
@@ -45,6 +35,17 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     .WithEnvironment("CLUSTER_ID", "bmcwR01GorP3gKszzXQFQA")
     .WithEnvironment("KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", "1")
     .WithHttpEndpoint(port: 29092, targetPort: 29092);
+
+IResourceBuilder<ContainerResource> debezium = builder.AddContainer("debezium", "quay.io/debezium/connect", "latest")
+    .WithLifetime(ContainerLifetime.Session)
+    .WithEnvironment("BOOTSTRAP_SERVERS", "kafka:9092")
+    .WithEnvironment("GROUP_ID", "1")
+    .WithEnvironment("CONFIG_STORAGE_TOPIC", "my_connect_configs")
+    .WithEnvironment("OFFSET_STORAGE_TOPIC", "my_connect_offsets")
+    .WithEnvironment("STATUS_STORAGE_TOPIC", "my_connect_statuses")
+    .WaitFor(tmsDatabase)
+    .WaitFor(kafka)
+    .WithHttpEndpoint(port: 8083, targetPort: 8083);
 
 IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379, builder.AddParameter("redisPassword", secret: true))
     .WithImageTag("8.6.2")
@@ -63,23 +64,25 @@ IResourceBuilder<ContainerResource> vault = builder.AddContainer("vault", "hashi
         await VaultService.WriteArcGisPasswordAsync(resource, password, ct);
     });
 
+
+IResourceBuilder<ProjectResource> tmsGateway = builder.AddProject<TMS_Gateway>("TMS-Gateway");
+
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection")
     .WaitFor(redis);
 
 builder.AddProject<TMS_WorkerService>("WorkerService")
+    .WaitFor(tmsDatabase)
     .WaitFor(signalR)
-    .WaitFor(debezium)
-    .WaitFor(kafka);
+    .WaitFor(debezium);
 
 IResourceBuilder<ProjectResource> tmsApi = builder.AddProject<TMS_API>("TMS-API")
     .WaitFor(tmsDatabase)
+    .WaitFor(tmsGateway)
+    .WaitFor(vault)
     .WithReference(tmsDatabase, "DefaultConnection");
  
-builder.AddProject<TMS_Gateway>("TMS-Gateway")
-    .WaitFor(tmsApi);
-
 DistributedApplication distributedApplication = builder.Build();
 
 await distributedApplication.RunAsync();
