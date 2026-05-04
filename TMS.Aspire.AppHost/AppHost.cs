@@ -15,7 +15,7 @@ builder.Configuration
 
 IResourceBuilder<SqlServerServerResource> devServer = builder.AddSqlServer("DevServer", builder.AddParameter("DevServerPassword", secret: true), 1433)
     .WithLifetime(ContainerLifetime.Session)
-    .WithImage("mssql/server", "2022-latest")
+    .WithImage("mssql/server", "2025-latest")
     .WithEnvironment("ACCEPT_EULA", "Y")
     .WithEnvironment("TZ", "Europe/London")
     .WithDataVolume("mssql_data");
@@ -47,7 +47,7 @@ IResourceBuilder<ContainerResource> kafka = builder.AddContainer("kafka", "confl
     .WithHttpEndpoint(port: 29092, targetPort: 29092);
 
 IResourceBuilder<RedisResource> redis = builder.AddRedis("redis-backplane", 6379, builder.AddParameter("redisPassword", secret: true))
-    .WithImageTag("8.2.3")
+    .WithImageTag("8.6.2")
     .WithLifetime(ContainerLifetime.Session)
     .WithRedisInsight();
 
