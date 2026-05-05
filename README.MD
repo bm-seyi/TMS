@@ -31,28 +31,38 @@ The system is designed to scale and run in production using **Azure Container Ap
 ## 🧩 System Architecture
 
 ```mermaid
-flowchart TD
-    **MAUI**[.**NET** **MAUI** Client App] -->|**HTTPS**| GW[**TMS**.Gateway (**YARP**)]
-    
-    GW --> **API**[**TMS**.**API**]
-    GW --> **SIG**[**TMS**.SignalR]
+flowchart LR
+    GW["TMS-Gateway<br/>(localhost:7258)"]
+    API["TMS-API<br/>(localhost:7058)"]
+    SIG["SignalR<br/>(localhost:7147)"]
+    DB["TMS-Database<br/>(SQL Server)"]
+    VAULT["vault<br/>(localhost:8200)"]
+    REDIS["redis-backplane<br/>(localhost:6379)"]
+    REDISINSIGHT["redisinsight<br/>(localhost:63509)"]
+    DEBEZ["debezium<br/>(localhost:8083)"]
+    KAFKA["kafka<br/>(localhost:29092)"]
+    WORKER["WorkerService"]
+    DEVSQL["DevServer<br/>(localhost:1433)"]
 
-    **API** --> DB[(**SQL** Server)]
-    **API** --> **REDIS**[(Redis Cache)]
-    **API** --> **VAULT**[(Vault Secrets)]
+    GW --> API
+    GW --> SIG
 
-    **SIG** --> **REDIS**
-    **SIG** --> **VAULT**
+    API --> DB
+    API --> VAULT
 
-    **WORKER**[**TMS**.WorkerService] --> DB
-    **WORKER** --> **KAFKA**[(Kafka)]
-    **WORKER** --> **VAULT**
+    SIG --> DB
+    SIG --> VAULT
+    SIG --> REDIS
 
-    DB -->|**CDC**| **DEBEZ**[Debezium Connector]
-    **DEBEZ** --> **KAFKA**
+    REDISINSIGHT --> REDIS
 
-    **KAFKA** --> **WORKER**
-    **KAFKA** --> **API**
+    DEVSQL --> DB
+
+    DB --> DEBEZ
+    DEBEZ --> KAFKA
+
+    KAFKA --> WORKER
+    WORKER --> DB
 ````
 
 ---
