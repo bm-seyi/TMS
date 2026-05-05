@@ -65,8 +65,6 @@ IResourceBuilder<ContainerResource> vault = builder.AddContainer("vault", "hashi
     });
 
 
-IResourceBuilder<ProjectResource> tmsGateway = builder.AddProject<TMS_Gateway>("TMS-Gateway");
-
 IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("SignalR")
     .WaitFor(tmsDatabase)
     .WithReference(tmsDatabase, "DefaultConnection")
@@ -75,13 +73,16 @@ IResourceBuilder<ProjectResource> signalR = builder.AddProject<TMS_SignalR>("Sig
 builder.AddProject<TMS_WorkerService>("WorkerService")
     .WaitFor(tmsDatabase)
     .WaitFor(signalR)
-    .WaitFor(debezium);
+    .WaitFor(kafka);
 
 IResourceBuilder<ProjectResource> tmsApi = builder.AddProject<TMS_API>("TMS-API")
     .WaitFor(tmsDatabase)
-    .WaitFor(tmsGateway)
     .WaitFor(vault)
     .WithReference(tmsDatabase, "DefaultConnection");
+
+IResourceBuilder<ProjectResource> tmsGateway = builder.AddProject<TMS_Gateway>("TMS-Gateway")
+    .WaitFor(tmsApi)
+    .WaitFor(signalR);
  
 DistributedApplication distributedApplication = builder.Build();
 
