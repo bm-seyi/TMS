@@ -1,5 +1,5 @@
 # Use the official .NET runtime as the base image
-FROM mcr.microsoft.com/dotnet/runtime:10.0.5-alpine3.23 AS base
+FROM mcr.microsoft.com/dotnet/runtime:10.0.7-alpine3.23 AS base
 WORKDIR /app
 EXPOSE 8080
 
