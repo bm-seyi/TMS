@@ -23,7 +23,7 @@ updates:
     open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "/Docker"
     schedule:
       interval: "weekly"
     labels:
