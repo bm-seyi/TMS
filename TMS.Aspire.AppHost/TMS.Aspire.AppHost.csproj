@@ -8,6 +8,7 @@
     <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.Redis" />
     <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="MessagePack" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
   </ItemGroup>
 
