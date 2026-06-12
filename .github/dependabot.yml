@@ -20,7 +20,6 @@ updates:
     labels:
       - "dependencies"
       - "nuget"
-    open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
     directory: "/Docker"
