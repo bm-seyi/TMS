@@ -21,7 +21,7 @@
 
         <!-- .NET Aspire-->
         <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.6" />
-        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.2" />
+        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.6" />
         <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.4.6" />
 
         <!-- Microsoft Misc-->
