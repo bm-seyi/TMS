@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Identity.Web" />
     <PackageReference Include="Asp.Versioning.Mvc" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
+    <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore"/>
   </ItemGroup>
