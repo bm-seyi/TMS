@@ -53,7 +53,7 @@
         <!-- Misc-->
         <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0"/>
         <PackageVersion Include="Grafana.OpenTelemetry.Base" Version="1.9.0"/>
-        <PackageVersion Include="AutoMapper" Version="16.1.1" />
+        <PackageVersion Include="AutoMapper" Version="16.2.0" />
         <PackageVersion Include="Confluent.Kafka" Version="2.15.0" />
         <PackageVersion Include="MediatR" Version="14.2.0" />
         <PackageVersion Include="Dapper" Version="2.1.79" />
