@@ -22,7 +22,7 @@
         <!-- .NET Aspire-->
         <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.2" />
         <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.3" />
-        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.5.2" />
+        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.5.3" />
 
         <!-- Microsoft Misc-->
         <PackageVersion Include="Microsoft.Identity.Web" Version="4.14.2" />
@@ -42,7 +42,7 @@
         <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.18.0-beta.1" />
 
         <!-- Testing-->
-        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.5.2" />
+        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.5.3" />
         <PackageVersion Include="MSTest" Version="4.3.3" />
         <PackageVersion Include="coverlet.collector" Version="10.0.1" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
