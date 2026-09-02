@@ -3,29 +3,29 @@
         <!-- Microsoft ASP.NET-->
         <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.11" />
         <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
-        <PackageVersion Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="10.0.10" />
-        <PackageVersion Include="Microsoft.AspNetCore.Mvc" Version="2.3.9" />
+        <PackageVersion Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="10.0.11" />
+        <PackageVersion Include="Microsoft.AspNetCore.Mvc" Version="2.3.12" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.11" />
 
         <!-- Microsoft Extensions-->
-        <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.10"/>
-        <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.ResourceUtilization" Version="10.8.0" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.8" />
-        <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
-        <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.8.0" />
+        <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.11"/>
+        <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.ResourceUtilization" Version="10.9.0" />
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.11" />
+        <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.9.0" />
+        <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.9.0" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.11" />
         <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.11" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.10" />
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.11" />
+        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
 
         <!-- .NET Aspire-->
-        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.4.6" />
-        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.4.6" />
-        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.4.6" />
+        <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.2" />
+        <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.2" />
+        <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.5.2" />
 
         <!-- Microsoft Misc-->
-        <PackageVersion Include="Microsoft.Identity.Web" Version="4.10.0" />
+        <PackageVersion Include="Microsoft.Identity.Web" Version="4.14.2" />
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.2" />
 
         <!-- Dotnet Foundation-->
@@ -33,26 +33,26 @@
         <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
 
         <!-- OpenTelemetry-->
-        <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.16.0" />
-        <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.16.0" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.16.0" />
-        <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.15.0-beta.1" />
+        <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.18.0" />
+        <PackageVersion Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.18.0-beta.1" />
 
         <!-- Testing-->
-        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.4.6" />
-        <PackageVersion Include="MSTest" Version="4.2.3" />
+        <PackageVersion Include="Aspire.Hosting.Testing" Version="13.5.2" />
+        <PackageVersion Include="MSTest" Version="4.3.3" />
         <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
         <PackageVersion Include="Moq" Version="4.20.72" />
-        <PackageVersion Include="MSTest.TestAdapter" Version="4.2.3" />
-        <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
+        <PackageVersion Include="MSTest.TestAdapter" Version="4.3.3" />
+        <PackageVersion Include="MSTest.TestFramework" Version="4.3.3" />
     
         <!-- Misc-->
         <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0"/>
-        <PackageVersion Include="Grafana.OpenTelemetry.Base" Version="1.9.0"/>
+        <PackageVersion Include="Grafana.OpenTelemetry.Base" Version="1.11.0"/>
         <PackageVersion Include="AutoMapper" Version="16.2.0" />
         <PackageVersion Include="Confluent.Kafka" Version="2.15.0" />
         <PackageVersion Include="MediatR" Version="14.2.0" />
