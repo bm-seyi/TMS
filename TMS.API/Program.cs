@@ -47,16 +47,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(options =>
 {
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    options.ApiVersionReader = new HeaderApiVersionReader("Version");
     options.UnsupportedApiVersionStatusCode = StatusCodes.Status404NotFound;
-}).AddApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
+})
+.AddMvc();
 
 // Response Compression
 builder.Services.AddResponseCompression(options =>
@@ -64,8 +59,7 @@ builder.Services.AddResponseCompression(options =>
     options.EnableForHttps = true;
     options.Providers.Add<BrotliCompressionProvider>();
     options.Providers.Add<GzipCompressionProvider>();
-    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-        new[] { MediaTypeNames.Application.Json });
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat([MediaTypeNames.Application.Json]);
 });
 
 builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
@@ -118,7 +112,6 @@ builder.Services.AddOutputCache(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
 
 // MediatR
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(IMediator).Assembly);});
